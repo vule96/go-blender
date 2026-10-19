@@ -47,3 +47,6 @@ next-env.d.ts
 *.blend1
 # raw exports before `model:optimize`
 *.raw.glb
+
+# skills
+.claude
