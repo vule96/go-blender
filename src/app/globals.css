@@ -253,3 +253,29 @@
     animation: none;
   }
 }
+
+/* ---------------------------------------------------------------- 3D page backdrop */
+.backdrop-cloud {
+  animation: cloud-drift linear infinite alternate;
+}
+.backdrop-cloud-slow {
+  animation-duration: 90s;
+}
+.backdrop-cloud-fast {
+  animation-duration: 60s;
+}
+
+@keyframes cloud-drift {
+  from {
+    transform: translateX(-60px);
+  }
+  to {
+    transform: translateX(160px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .backdrop-cloud {
+    animation: none;
+  }
+}

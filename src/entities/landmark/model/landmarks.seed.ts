@@ -13,8 +13,8 @@ export const LANDMARK_SEED = [
     category: 'religious',
     summary:
       'Nhà thờ phong cách Gothic xây bằng đá trên một ngọn đồi nhỏ giữa trung tâm Nha Trang, nổi bật với tháp chuông có đồng hồ bốn mặt và cửa sổ kính màu.',
-    coordinates: { lat: 12.2466, lng: 109.1886 },
-    model: { path: '/models/nha-tho-nui.glb', sizeKb: 411 },
+    coordinates: { lat: 12.2467361, lng: 109.1855508 },
+    model: { path: '/models/nha-tho-nui.glb', sizeKb: 294 },
   },
   {
     slug: 'thap-ba-ponagar',
@@ -23,8 +23,8 @@ export const LANDMARK_SEED = [
     category: 'historical',
     summary:
       'Quần thể đền tháp Chăm Pa trên đồi Cù Lao bên cửa sông Cái, Nha Trang, thờ nữ thần Po Inư Nagar. Phía dưới là sảnh cột (mandapa), bậc đá dẫn lên các tháp gạch, cao nhất là tháp Bắc khoảng 23 m.',
-    coordinates: { lat: 12.2653, lng: 109.1955 },
-    model: { path: '/models/thap-ba-ponagar.glb', sizeKb: 220 },
+    coordinates: { lat: 12.2653717, lng: 109.1927929 },
+    model: { path: '/models/thap-ba-ponagar.glb', sizeKb: 434 },
   },
   {
     slug: 'chua-long-son',
@@ -33,8 +33,8 @@ export const LANDMARK_SEED = [
     category: 'religious',
     summary:
       'Ngôi chùa dưới chân đồi Trại Thủy, Nha Trang, lập từ cuối thế kỷ 19. Từ chánh điện mái cong, du khách leo khoảng 150 bậc lên đỉnh đồi, nơi tượng Kim Thân Phật Tổ trắng ngồi trên đài sen, cao 24 m.',
-    coordinates: { lat: 12.2504, lng: 109.1802 },
-    model: { path: '/models/chua-long-son.glb', sizeKb: 212 },
+    coordinates: { lat: 12.2501855, lng: 109.1776004 },
+    model: { path: '/models/chua-long-son.glb', sizeKb: 385 },
   },
   {
     slug: 'ho-hoan-kiem',

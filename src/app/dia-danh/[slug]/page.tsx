@@ -6,6 +6,7 @@ import { landmarkRepository } from '@/entities/landmark/api/landmark-repository'
 import { hasModel, LANDMARK_CATEGORY_LABEL } from '@/entities/landmark/model/landmark';
 import { getProvince } from '@/entities/province/model/provinces';
 import { ModelViewer } from '@/features/model-viewer/ui/model-viewer';
+import { OutdoorBackdrop } from '@/features/model-viewer/ui/outdoor-backdrop';
 import { assetExists } from '@/shared/lib/asset-exists';
 import { assetUrl } from '@/shared/lib/asset-url';
 import { BackLink } from '@/shared/ui/back-link';
@@ -50,8 +51,9 @@ async function LandmarkContent({ params }: { readonly params: Params }) {
         {modelPath ? (
           <ModelViewer url={assetUrl(modelPath)} />
         ) : (
-          <div className="ocean-surface grid h-full place-items-center p-6">
-            <div className="max-w-xs rounded-2xl border-4 border-sand-300 bg-sand-50 p-4 text-[15px] shadow-xl">
+          <div className="relative grid h-full place-items-center overflow-hidden p-6">
+            <OutdoorBackdrop />
+            <div className="relative max-w-xs rounded-2xl border-4 border-sand-300 bg-sand-50 p-4 text-[15px] shadow-xl">
               <p className="font-display text-lg font-bold">Chưa có mô hình 3D</p>
               <p className="mt-1 text-ink-muted">
                 {hasModel(landmark) ? (
@@ -102,7 +104,7 @@ async function LandmarkContent({ params }: { readonly params: Params }) {
 function LandmarkSkeleton() {
   return (
     <>
-      <div className="ocean-surface h-[58dvh] md:h-dvh" />
+      <div className="h-[58dvh] bg-[#bfe5f6] md:h-dvh" />
       <div className="bg-sand-50 px-5 py-6 md:px-8 md:py-10" aria-busy="true">
         <div className="h-4 w-20 rounded-md bg-sand-200" />
         <div className="mt-6 h-10 w-4/5 rounded-md bg-sand-200" />

@@ -1,31 +1,142 @@
 'use client';
 
 import {
-  Bounds,
   ContactShadows,
   Environment,
-  Grid,
   Lightformer,
   OrbitControls,
   useGLTF,
   useProgress,
 } from '@react-three/drei';
-import { Canvas } from '@react-three/fiber';
-import { Component, type ReactNode, Suspense, useState } from 'react';
-
-/** The map's deep-sea blue (`--color-ocean-700`), so models sit in the same world as the map. */
-const SEA = '#17607f';
+import { Canvas, useThree } from '@react-three/fiber';
+import { Component, type ReactNode, Suspense, useLayoutEffect, useMemo, useState } from 'react';
+import { Box3, type DirectionalLight, type OrthographicCamera, Sphere, Vector3 } from 'three';
 
 export interface ModelSceneProps {
   readonly url: string;
   readonly autoRotate?: boolean;
 }
 
+/** Classic isometric view direction: 45° around, 35.26° above the horizon. */
+const ISO_DIRECTION = new Vector3(1, 1, 1).normalize();
+/** Share of the viewport (shorter side) the model's bounding sphere may fill. */
+const FILL = 0.92;
+
+/** The parts of OrbitControls the framing touches. */
+interface ZoomableControls {
+  readonly target: Vector3;
+  minZoom: number;
+  maxZoom: number;
+  update(): void;
+}
+
+interface Framing {
+  readonly center: Vector3;
+  readonly radius: number;
+  readonly floorY: number;
+}
+
+/**
+ * Frames the camera on the model synchronously, before the first frame is
+ * drawn: no fly-in animation, the model simply appears in place.
+ */
+function useIsometricFraming({ center, radius }: Framing) {
+  // three.js objects are mutable by design: read them from the store inside the
+  // effect instead of mutating values returned by a hook.
+  const get = useThree((s) => s.get);
+  const width = useThree((s) => s.size.width);
+  const height = useThree((s) => s.size.height);
+  const hasControls = useThree((s) => s.controls !== null);
+
+  useLayoutEffect(() => {
+    const state = get();
+    const camera = state.camera as OrthographicCamera;
+    camera.position.copy(center).addScaledVector(ISO_DIRECTION, radius * 6);
+    camera.near = 0.1;
+    camera.far = radius * 20;
+    camera.zoom = (Math.min(width, height) * FILL) / (radius * 2);
+    camera.lookAt(center);
+    camera.updateProjectionMatrix();
+    const controls = state.controls as unknown as ZoomableControls | null;
+    if (controls) {
+      controls.target.copy(center);
+      controls.minZoom = camera.zoom * 0.6;
+      controls.maxZoom = camera.zoom * 4;
+      controls.update();
+    }
+    // The model and the sun never move (only the camera orbits), so the shadow
+    // map is rendered once instead of every frame.
+    state.gl.shadowMap.autoUpdate = false;
+    state.gl.shadowMap.needsUpdate = true;
+  }, [center, get, hasControls, height, radius, width]);
+}
+
 function Model({ url }: { readonly url: string }) {
   // (path, useDraco, useMeshopt): models are compressed with meshopt by
   // `gltf-transform optimize`, whose decoder ships with three — no CDN needed.
   const { scene } = useGLTF(url, false, true);
-  return <primitive object={scene} />;
+
+  const framing = useMemo<Framing>(() => {
+    scene.traverse((o) => {
+      o.castShadow = true;
+      o.receiveShadow = true;
+    });
+    const box = new Box3().setFromObject(scene);
+    const sphere = box.getBoundingSphere(new Sphere());
+    return { center: sphere.center, radius: sphere.radius, floorY: box.min.y };
+  }, [scene]);
+
+  useIsometricFraming(framing);
+
+  const { center, radius, floorY } = framing;
+  return (
+    <>
+      <primitive object={scene} />
+      <Sun center={center} radius={radius} />
+      {/* Soft shadow under the base: the diorama hovers in front of the backdrop. */}
+      <ContactShadows
+        position={[center.x, floorY - radius * 0.04, center.z]}
+        opacity={0.35}
+        scale={radius * 2.6}
+        blur={2.8}
+        far={radius * 0.5}
+        resolution={512}
+        frames={1}
+      />
+    </>
+  );
+}
+
+/** Warm key light whose shadow camera is sized to the model. */
+function Sun({ center, radius }: { readonly center: Vector3; readonly radius: number }) {
+  const position = useMemo(
+    () => center.clone().add(new Vector3(-0.6, 1.1, 0.8).normalize().multiplyScalar(radius * 3)),
+    [center, radius],
+  );
+  return (
+    <directionalLight
+      ref={(light: DirectionalLight | null) => {
+        if (!light) return;
+        light.target.position.copy(center);
+        light.target.updateMatrixWorld();
+        const cam = light.shadow.camera;
+        cam.left = -radius;
+        cam.right = radius;
+        cam.top = radius;
+        cam.bottom = -radius;
+        cam.near = 0.1;
+        cam.far = radius * 6;
+        cam.updateProjectionMatrix();
+      }}
+      position={position}
+      intensity={2.1}
+      color="#fff1da"
+      castShadow
+      shadow-mapSize={[1024, 1024]}
+      shadow-bias={-0.0004}
+      shadow-normalBias={0.02}
+    />
+  );
 }
 
 /** DOM overlay (outside the Canvas): drei's progress store is global, so it works here too. */
@@ -69,7 +180,7 @@ class ErrorBoundary extends Component<BoundaryProps, BoundaryState> {
 
 function ErrorMessage({ title, children }: { readonly title: string; readonly children: ReactNode }) {
   return (
-    <div className="ocean-surface grid h-full w-full place-items-center p-6">
+    <div className="grid h-full w-full place-items-center p-6">
       <div className="max-w-sm rounded-2xl border-4 border-sand-300 bg-sand-50 p-4 text-[15px] text-ink shadow-xl">
         <p className="font-display text-lg font-bold">{title}</p>
         <p className="mt-1 text-ink-muted">{children}</p>
@@ -79,8 +190,9 @@ function ErrorMessage({ title, children }: { readonly title: string; readonly ch
 }
 
 /**
- * Interactive 3D viewer: drag to orbit 360°, scroll/pinch to zoom.
- * Studio lighting is built from Lightformers (no HDRI download).
+ * Interactive 3D viewer: an orthographic, isometric camera (like the models'
+ * diorama style), drag to orbit 360°, scroll/pinch to zoom. The canvas is
+ * transparent; the outdoor backdrop behind it is plain DOM/SVG.
  */
 export default function ModelScene({ url, autoRotate = true }: ModelSceneProps) {
   const [interacting, setInteracting] = useState(false);
@@ -107,27 +219,13 @@ export default function ModelScene({ url, autoRotate = true }: ModelSceneProps) 
         }
       >
         <Canvas
+          orthographic
           shadows="percentage"
           dpr={[1, 2]}
-          camera={{ position: [6, 4.5, 6], fov: 35, near: 0.1, far: 200 }}
-          gl={{ antialias: true, preserveDrawingBuffer: false }}
+          camera={{ position: [50, 50, 50], zoom: 10, near: 0.1, far: 1000 }}
+          gl={{ antialias: true, alpha: true }}
         >
-          <color attach="background" args={[SEA]} />
-          <hemisphereLight args={['#fff6e6', SEA, 0.6]} />
-          {/* A faint grid on the sea floor, echoing the map's latitude/longitude lines. */}
-          <Grid
-            position={[0, -0.002, 0]}
-            infiniteGrid
-            cellSize={0.25}
-            cellThickness={0.6}
-            cellColor="#2a7a96"
-            sectionSize={1}
-            sectionThickness={1}
-            sectionColor="#5fb0c8"
-            fadeDistance={40}
-            fadeStrength={1.2}
-          />
-          <directionalLight position={[5, 8, 4]} intensity={1.6} castShadow shadow-mapSize={[2048, 2048]} />
+          <hemisphereLight args={['#e3f3ff', '#9cbf7e', 1.1]} />
           <ErrorBoundary
             fallback={null}
             onError={() => {
@@ -135,32 +233,35 @@ export default function ModelScene({ url, autoRotate = true }: ModelSceneProps) 
             }}
           >
             <Suspense fallback={null}>
-              <Bounds fit clip observe margin={1.3}>
-                <Model url={url} />
-              </Bounds>
+              <Model url={url} />
             </Suspense>
           </ErrorBoundary>
           <Suspense fallback={null}>
-            <ContactShadows position={[0, -0.001, 0]} opacity={0.45} scale={14} blur={2.4} far={6} />
             <Environment resolution={256}>
-              <Lightformer form="rect" intensity={2} position={[0, 5, -6]} scale={[10, 4, 1]} />
               <Lightformer
                 form="rect"
-                intensity={1}
-                position={[-6, 2, 2]}
-                scale={[4, 8, 1]}
+                intensity={1.6}
+                position={[0, 6, -8]}
+                scale={[12, 5, 1]}
+                color="#dff0ff"
+              />
+              <Lightformer
+                form="rect"
+                intensity={0.8}
+                position={[-8, 3, 3]}
+                scale={[5, 8, 1]}
                 rotation-y={Math.PI / 2}
               />
-              <Lightformer form="ring" intensity={1.5} position={[6, 3, 4]} scale={3} />
             </Environment>
           </Suspense>
           <OrbitControls
             makeDefault
             autoRotate={autoRotate && !interacting}
-            autoRotateSpeed={0.8}
+            autoRotateSpeed={0.6}
             enablePan={false}
-            minPolarAngle={0.25}
-            maxPolarAngle={Math.PI / 2.05}
+            // Stay close to the isometric angle: from a low three-quarter view to a steep bird's-eye.
+            minPolarAngle={0.55}
+            maxPolarAngle={1.25}
             onStart={() => {
               setInteracting(true);
             }}
