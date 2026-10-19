@@ -110,8 +110,11 @@ export const LANDMARK_SEED = [
     name: 'Cầu Rồng',
     provinceId: 'da-nang',
     category: 'architecture',
-    summary: 'Cây cầu hình rồng bắc qua sông Hàn, phun lửa và phun nước vào tối cuối tuần.',
+    summary:
+      'Cây cầu dài 666,5 m, rộng 37,5 m với sáu làn xe bắc qua sông Hàn, thông xe ngày 29/3/2013. Vòm thép vàng uốn lượn theo hình rồng thời Lý, đầu rồng hướng ra biển; 21 giờ tối thứ Sáu, thứ Bảy, Chủ nhật và ngày lễ, rồng phun lửa rồi phun nước.',
     coordinates: { lat: 16.0612, lng: 108.2274 },
+    mapsQuery: 'Cầu Rồng, Đà Nẵng',
+    model: { path: '/models/cau-rong.glb', sizeKb: 302 },
   },
   {
     slug: 'pho-co-hoi-an',
