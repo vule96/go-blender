@@ -6,21 +6,20 @@ import type { ModelSceneProps } from './model-scene';
 
 /**
  * three.js only runs in the browser and is heavy, so the scene is split into
- * its own chunk and loaded on the client after the page shell renders.
+ * its own chunk, loaded on the client after the page shell renders.
+ * `preloadModelScene()` warms the same chunk from links.
  */
 const ModelScene = dynamic(() => import('./model-scene'), {
   ssr: false,
-  loading: () => (
-    <div className="grid h-full place-items-center text-sm text-white/80">Đang khởi tạo trình xem 3D…</div>
-  ),
+  loading: () => <div className="mat-surface h-full w-full" />,
 });
 
 export function ModelViewer(props: ModelSceneProps) {
   return (
-    <div className="relative aspect-square w-full overflow-hidden rounded-3xl bg-ocean-700 shadow-xl ring-4 ring-sand-300 sm:aspect-[4/3]">
+    <div className="relative h-full min-h-[320px] w-full overflow-hidden bg-mat">
       <ModelScene {...props} />
-      <p className="pointer-events-none absolute bottom-3 left-1/2 -translate-x-1/2 rounded-full bg-black/40 px-3 py-1 text-xs text-white backdrop-blur">
-        Kéo để xoay 360° · Cuộn hoặc chụm để phóng to
+      <p className="pointer-events-none absolute bottom-3 left-4 text-sm text-mat-ink">
+        Kéo để xoay, cuộn hoặc chụm hai ngón để phóng to
       </p>
     </div>
   );

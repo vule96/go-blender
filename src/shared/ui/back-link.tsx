@@ -1,18 +1,25 @@
 import type { Route } from 'next';
 import Link from 'next/link';
+import type { ReactNode } from 'react';
+
+import { cn } from '@/shared/lib/cn';
+
+import { ChevronLeftIcon } from './icons';
 
 interface BackLinkProps<T extends string> {
   readonly href: Route<T>;
-  readonly children: React.ReactNode;
+  readonly children: ReactNode;
+  readonly className?: string;
 }
 
-export function BackLink<T extends string>({ href, children }: BackLinkProps<T>) {
+export function BackLink<T extends string>({ href, children, className }: BackLinkProps<T>) {
   return (
     <Link
       href={href}
-      className="inline-flex items-center gap-1.5 rounded-full bg-white/80 px-3 py-1.5 text-sm font-semibold text-leaf-900 shadow-sm ring-1 ring-sand-300 transition hover:bg-white"
+      prefetch
+      className={cn('-ml-1 inline-flex items-center gap-1 py-1 text-sm transition-colors', className)}
     >
-      <span aria-hidden>←</span>
+      <ChevronLeftIcon className="size-4" aria-hidden="true" />
       {children}
     </Link>
   );

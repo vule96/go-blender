@@ -2,77 +2,88 @@
 
 import Link from 'next/link';
 
-import { hasModel, type Landmark, LANDMARK_CATEGORY_LABEL } from '@/entities/landmark';
-import { type Province, provinceKindLabel, REGION_LABEL } from '@/entities/province';
+import { LANDMARK_CATEGORY_LABEL, type LandmarkListItem } from '@/entities/landmark/model/landmark';
+import { type Province, provinceKindLabel, REGION_LABEL } from '@/entities/province/model/provinces';
+import { RegionSwatch } from '@/entities/province/ui/region-swatch';
+import { LandmarkLink } from '@/features/model-viewer/ui/landmark-link';
+import { ChevronLeftIcon, ModelCubeIcon } from '@/shared/ui/icons';
 
 interface ProvinceDetailsProps {
   readonly province: Province;
-  readonly landmarks: readonly Landmark[];
-  readonly onClose: () => void;
+  readonly landmarks: readonly LandmarkListItem[];
+  readonly onBack: () => void;
 }
 
-export function ProvinceDetails({ province, landmarks, onClose }: ProvinceDetailsProps) {
+export function ProvinceDetails({ province, landmarks, onBack }: ProvinceDetailsProps) {
   return (
-    <div className="flex min-h-0 flex-1 flex-col gap-4">
-      <div className="flex items-start justify-between gap-3">
-        <div>
-          <p className="text-xs font-semibold tracking-wide text-leaf-700 uppercase">
-            {REGION_LABEL[province.region]} · {provinceKindLabel(province.kind)}
-          </p>
-          <h2 className="font-display text-3xl leading-tight font-extrabold text-ink">{province.name}</h2>
-          {province.mergedFrom.length > 0 && (
-            <p className="mt-1 text-sm text-ink/70">Hợp nhất với: {province.mergedFrom.join(', ')}</p>
-          )}
-        </div>
+    <div className="flex min-h-0 flex-1 flex-col">
+      <div className="px-5">
         <button
           type="button"
-          onClick={onClose}
-          aria-label="Đóng"
-          className="grid size-9 shrink-0 place-items-center rounded-full bg-sand-200 text-ink/70 transition hover:bg-sand-300"
+          onClick={onBack}
+          className="-ml-1 inline-flex items-center gap-1 py-1 text-sm text-ink-muted transition-colors hover:text-ink"
         >
-          ✕
+          <ChevronLeftIcon className="size-4" aria-hidden="true" />
+          Tất cả tỉnh
         </button>
+
+        <h2 className="mt-3 text-[2.25rem] leading-[1.02] font-extrabold tracking-[-0.01em] text-balance type-wide">
+          {province.name}
+        </h2>
+        <p className="mt-2 flex items-center gap-2 text-[15px] text-ink-muted">
+          <RegionSwatch region={province.region} />
+          {provinceKindLabel(province.kind)}, {REGION_LABEL[province.region].toLowerCase()}.
+        </p>
+        {province.mergedFrom.length > 0 ? (
+          <p className="mt-1 text-[15px] text-ink-muted">
+            Từ 7/2025 gồm cả {province.mergedFrom.join(' và ')}.
+          </p>
+        ) : null}
       </div>
 
-      <div className="-mr-2 min-h-0 flex-1 overflow-y-auto pr-2">
-        <h3 className="mb-2 font-display text-lg font-bold text-ink">Địa danh nổi bật</h3>
+      <div className="mt-6 min-h-0 flex-1 overflow-y-auto overscroll-contain px-5">
+        <h3 className="flex items-baseline border-b border-ink pb-1.5 text-sm font-semibold">
+          Địa danh
+          <span className="ml-auto font-normal text-ink-muted tabular-nums">{landmarks.length}</span>
+        </h3>
         {landmarks.length === 0 ? (
-          <p className="rounded-2xl border-2 border-dashed border-sand-300 p-4 text-sm text-ink/60">
-            Chưa có địa danh nào cho {province.name}. Mô hình 3D sẽ sớm được bổ sung.
+          <p className="py-4 text-[15px] text-ink-muted">
+            Chưa có địa danh nào của {province.name} trên bản đồ.
           </p>
         ) : (
-          <ul className="space-y-2">
+          <ul>
             {landmarks.map((l) => (
-              <li key={l.slug}>
-                <Link
-                  href={`/dia-danh/${l.slug}`}
-                  className="group block rounded-2xl border-2 border-sand-200 bg-white p-3 shadow-sm transition hover:-translate-y-0.5 hover:border-leaf-400 hover:shadow-md"
+              <li key={l.slug} className="border-b border-rule">
+                <LandmarkLink
+                  slug={l.slug}
+                  hasModel={l.hasModel}
+                  className="group flex items-center gap-3 py-2.5 focus-visible:outline-offset-0"
                 >
-                  <div className="flex items-center justify-between gap-2">
-                    <span className="font-display font-bold text-ink">{l.name}</span>
-                    {hasModel(l) && (
-                      <span className="shrink-0 rounded-full bg-leaf-600 px-2 py-0.5 text-[11px] font-bold text-white">
-                        3D
-                      </span>
-                    )}
-                  </div>
-                  <p className="mt-0.5 text-xs font-semibold text-leaf-700">
-                    {LANDMARK_CATEGORY_LABEL[l.category]}
-                  </p>
-                  <p className="mt-1 line-clamp-2 text-sm text-ink/70">{l.summary}</p>
-                </Link>
+                  <span className="min-w-0 flex-1">
+                    <span className="block text-[15px] font-medium transition-colors group-hover:text-select">
+                      {l.name}
+                    </span>
+                    <span className="block text-sm text-ink-muted">
+                      {LANDMARK_CATEGORY_LABEL[l.category]}
+                    </span>
+                  </span>
+                  {l.hasModel ? <ModelCubeIcon role="img" aria-label="Có mô hình 3D" /> : null}
+                </LandmarkLink>
               </li>
             ))}
           </ul>
         )}
       </div>
 
-      <Link
-        href={`/tinh/${province.id}`}
-        className="block rounded-2xl bg-leaf-700 px-4 py-3 text-center font-display font-bold text-white shadow-[0_4px_0_0_var(--color-leaf-900)] transition hover:bg-leaf-600 active:translate-y-0.5 active:shadow-none"
-      >
-        Xem trang {province.name}
-      </Link>
+      <div className="p-5">
+        <Link
+          href={`/tinh/${province.id}`}
+          prefetch
+          className="block rounded-md bg-ink px-4 py-3 text-center text-[15px] font-semibold text-paper transition-colors hover:bg-black"
+        >
+          Mở trang {province.name}
+        </Link>
+      </div>
     </div>
   );
 }

@@ -1,16 +1,22 @@
 import type { Metadata } from 'next';
-import Link from 'next/link';
 import { notFound } from 'next/navigation';
+import { Suspense } from 'react';
 
-import { hasModel, LANDMARK_CATEGORY_LABEL, landmarkRepository } from '@/entities/landmark';
+import { landmarkRepository } from '@/entities/landmark/api/landmark-repository';
+import { hasModel, LANDMARK_CATEGORY_LABEL } from '@/entities/landmark/model/landmark';
 import {
   findProvince,
   provinceKindLabel,
-  ProvinceMinimap,
   PROVINCES,
   REGION_LABEL,
-} from '@/entities/province';
+} from '@/entities/province/model/provinces';
+import { ProvinceMinimap } from '@/entities/province/ui/province-minimap';
+import { RegionSwatch } from '@/entities/province/ui/region-swatch';
+import { LandmarkLink } from '@/features/model-viewer/ui/landmark-link';
 import { BackLink } from '@/shared/ui/back-link';
+import { ModelCubeIcon } from '@/shared/ui/icons';
+
+type Params = PageProps<'/tinh/[provinceId]'>['params'];
 
 export function generateStaticParams() {
   return PROVINCES.map((p) => ({ provinceId: p.id }));
@@ -21,68 +27,101 @@ export async function generateMetadata({ params }: PageProps<'/tinh/[provinceId]
   if (!province) return {};
   return {
     title: province.name,
-    description: `Địa điểm nổi bật của ${province.name} trên bản đồ 3D GoBlender.`,
+    description: `Các địa danh nổi bật của ${province.name} và mô hình 3D có thể xoay 360°.`,
   };
 }
 
-export default async function ProvincePage({ params }: PageProps<'/tinh/[provinceId]'>) {
+/**
+ * The page shell renders without the URL: `params` is URL data, so everything
+ * that reads it sits behind a Suspense boundary (Cache Components requires this
+ * even for params listed in generateStaticParams).
+ */
+export default function ProvincePage({ params }: PageProps<'/tinh/[provinceId]'>) {
+  return (
+    <main className="grid min-h-dvh md:grid-cols-[minmax(0,1fr)_minmax(0,34rem)]">
+      <Suspense fallback={<ProvinceSkeleton />}>
+        <ProvinceContent params={params} />
+      </Suspense>
+    </main>
+  );
+}
+
+async function ProvinceContent({ params }: { readonly params: Params }) {
   const province = findProvince((await params).provinceId);
   if (!province) notFound();
 
   const landmarks = await landmarkRepository.listByProvince(province.id);
 
   return (
-    <main className="mx-auto grid max-w-5xl gap-8 px-4 py-8 md:grid-cols-[1fr_320px] md:py-12">
-      <section className="space-y-6">
-        <BackLink href={`/?tinh=${province.id}`}>Bản đồ</BackLink>
-        <header className="space-y-1">
-          <p className="text-sm font-semibold tracking-wide text-leaf-700 uppercase">
-            {REGION_LABEL[province.region]} · {provinceKindLabel(province.kind)}
-          </p>
-          <h1 className="font-display text-4xl font-extrabold text-leaf-900 md:text-5xl">{province.name}</h1>
-          {province.mergedFrom.length > 0 && (
-            <p className="text-ink/70">Hợp nhất với: {province.mergedFrom.join(', ')}</p>
-          )}
-        </header>
+    <>
+      <div className="mat-surface relative h-[42dvh] overflow-hidden md:sticky md:top-0 md:h-dvh">
+        <ProvinceMinimap provinceId={province.id} className="absolute inset-0 size-full p-6 md:p-12" />
+      </div>
 
-        <h2 className="font-display text-2xl font-bold">Địa điểm nổi bật</h2>
+      <article className="bg-paper px-5 py-6 md:px-10 md:py-10">
+        <BackLink href={`/?tinh=${province.id}`} className="text-ink-muted hover:text-ink">
+          Bản đồ
+        </BackLink>
+
+        <h1 className="mt-4 text-[clamp(2.25rem,6vw,3.5rem)] leading-[1.02] font-extrabold tracking-[-0.015em] text-balance type-wide">
+          {province.name}
+        </h1>
+        <p className="mt-3 flex items-center gap-2 text-[17px] text-ink-muted">
+          <RegionSwatch region={province.region} />
+          {provinceKindLabel(province.kind)}, {REGION_LABEL[province.region].toLowerCase()}.
+        </p>
+        {province.mergedFrom.length > 0 ? (
+          <p className="mt-1 text-[17px] text-ink-muted">
+            Từ 7/2025 gồm cả {province.mergedFrom.join(' và ')}.
+          </p>
+        ) : null}
+
+        <h2 className="mt-10 flex items-baseline border-b border-ink pb-2 text-base font-semibold">
+          Địa danh
+          <span className="ml-auto font-normal text-ink-muted tabular-nums">{landmarks.length}</span>
+        </h2>
+
         {landmarks.length === 0 ? (
-          <p className="rounded-2xl bg-white/70 p-6 text-ink/70 ring-1 ring-sand-300">
-            Chưa có địa điểm nào. Thêm vào <code>landmarks.seed.ts</code> nhé!
+          <p className="max-w-[60ch] py-5 text-[17px] text-ink-muted">
+            Chưa có địa danh nào của {province.name}. Khi một địa danh được thêm vào, nó sẽ hiện ở đây kèm mô
+            hình 3D nếu có.
           </p>
         ) : (
-          <ul className="grid gap-3 sm:grid-cols-2">
+          <ul>
             {landmarks.map((l) => (
-              <li key={l.slug}>
-                <Link
-                  href={`/dia-danh/${l.slug}`}
-                  className="block h-full rounded-2xl bg-white p-4 shadow-sm ring-1 ring-sand-300 transition hover:-translate-y-0.5 hover:shadow-md"
-                >
-                  <div className="flex items-center justify-between gap-2">
-                    <span className="text-xs font-semibold text-leaf-700">
+              <li key={l.slug} className="border-b border-rule">
+                <LandmarkLink slug={l.slug} hasModel={hasModel(l)} className="group flex gap-4 py-4">
+                  <span className="min-w-0 flex-1">
+                    <span className="block text-lg font-semibold transition-colors group-hover:text-select">
+                      {l.name}
+                    </span>
+                    <span className="block text-sm text-ink-muted">
                       {LANDMARK_CATEGORY_LABEL[l.category]}
                     </span>
-                    {hasModel(l) && (
-                      <span className="rounded-full bg-coral-500 px-2 py-0.5 text-xs font-bold text-white">
-                        3D
-                      </span>
-                    )}
-                  </div>
-                  <h3 className="mt-1 font-display text-lg font-bold">{l.name}</h3>
-                  <p className="mt-1 line-clamp-3 text-sm text-ink/70">{l.summary}</p>
-                </Link>
+                    <span className="mt-1.5 block max-w-[60ch] text-[15px] leading-relaxed">{l.summary}</span>
+                  </span>
+                  {hasModel(l) ? (
+                    <ModelCubeIcon role="img" aria-label="Có mô hình 3D" className="mt-1.5 size-5 shrink-0" />
+                  ) : null}
+                </LandmarkLink>
               </li>
             ))}
           </ul>
         )}
-      </section>
+      </article>
+    </>
+  );
+}
 
-      <aside className="md:pt-14">
-        <ProvinceMinimap
-          provinceId={province.id}
-          className="aspect-square w-full shadow-lg ring-4 ring-sand-300"
-        />
-      </aside>
-    </main>
+function ProvinceSkeleton() {
+  return (
+    <>
+      <div className="mat-surface h-[42dvh] md:h-dvh" />
+      <div className="bg-paper px-5 py-6 md:px-10 md:py-10" aria-busy="true">
+        <div className="h-4 w-16 rounded-sm bg-rule" />
+        <div className="mt-6 h-12 w-3/4 rounded-sm bg-rule" />
+        <div className="mt-4 h-4 w-1/2 rounded-sm bg-rule" />
+      </div>
+    </>
   );
 }

@@ -19,8 +19,21 @@ import {
   type ZoomLimits,
 } from '../lib/viewport';
 
-/** Zoom level from which the map counts as zoomed-in (`data-zoom="detail"` on the svg). */
-export const DETAIL_ZOOM = 1.8;
+/**
+ * Coarse zoom tiers written to `data-zoom` on the <svg> so CSS can reveal
+ * detail (e.g. secondary labels) without React re-rendering while zooming.
+ */
+export const ZOOM_TIERS = [
+  { name: 'overview', minK: 0 },
+  { name: 'detail', minK: 1.8 },
+  { name: 'close', minK: 3.5 },
+] as const;
+
+function zoomTier(k: number): string {
+  let name: string = ZOOM_TIERS[0].name;
+  for (const tier of ZOOM_TIERS) if (k >= tier.minK) name = tier.name;
+  return name;
+}
 
 export interface PanZoomOptions {
   /** Map content rectangle in viewBox units (the generated map's viewBox). */
@@ -50,6 +63,10 @@ export interface FlyToOptions {
   readonly padding?: number;
   /** Keep the target inside the part of the map that is actually visible. */
   readonly insets?: Insets;
+  /** Jump instead of flying (e.g. the first frame after mount). Defaults to true. */
+  readonly animate?: boolean;
+  /** Upper zoom limit for this flight. Defaults to 8, so small provinces don't fill the screen. */
+  readonly maxZoom?: number;
 }
 
 const DEFAULT_LIMITS: ZoomLimits = { minK: 1, maxK: 14 };
@@ -85,7 +102,7 @@ export function usePanZoom(
       if (!svg) return;
       svg.style.setProperty('--map-k', v.k.toFixed(4));
       // Coarse zoom tier for CSS (e.g. reveal secondary labels). Only touch the DOM when it changes.
-      const tier = v.k >= DETAIL_ZOOM ? 'detail' : 'overview';
+      const tier = zoomTier(v.k);
       if (svg.dataset['zoom'] !== tier) svg.dataset['zoom'] = tier;
     });
   }, [layerRef, svgRef]);
@@ -284,13 +301,21 @@ export function usePanZoom(
       reset: () => {
         animateTo(IDENTITY);
       },
-      flyToBounds: (bounds, { padding = 60, insets = {} } = {}) => {
+      flyToBounds: (bounds, { padding = 60, insets = {}, animate = true, maxZoom = 8 } = {}) => {
         const visible = shrinkByInsets(view.current, insets, svgRef.current);
-        animateTo(fitBounds(bounds, visible, padding, { ...limits, maxK: Math.min(limits.maxK, 8) }));
+        const target = fitBounds(bounds, visible, padding, {
+          ...limits,
+          maxK: Math.min(limits.maxK, maxZoom),
+        });
+        if (animate) animateTo(target);
+        else {
+          stopAnimation();
+          set(target);
+        }
       },
       getViewport: () => viewport.current,
     }),
-    [animateTo, limits, svgRef],
+    [animateTo, limits, set, stopAnimation, svgRef],
   );
 }
 

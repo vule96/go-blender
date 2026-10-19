@@ -24,6 +24,13 @@ export interface ArchipelagoShape {
   readonly bounds: Bounds;
 }
 
+export interface Graticule {
+  /** Spacing between lines, in degrees. */
+  readonly step: number;
+  readonly meridians: readonly { readonly deg: number; readonly x: number }[];
+  readonly parallels: readonly { readonly deg: number; readonly y: number }[];
+}
+
 export interface VietnamMapData {
   readonly version: number;
   readonly generatedAt: string;
@@ -34,6 +41,9 @@ export interface VietnamMapData {
   readonly borders: string;
   /** Outer coastline / national border. */
   readonly coastline: string;
+  /** Union of all provinces (one outline for the whole country). */
+  readonly land: string;
+  readonly graticule: Graticule;
   readonly archipelagos: readonly ArchipelagoShape[];
 }
 

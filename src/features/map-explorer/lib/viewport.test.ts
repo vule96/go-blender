@@ -22,11 +22,13 @@ describe('zoomAround', () => {
 });
 
 describe('constrain', () => {
-  it('centres content that is smaller than the view', () => {
+  it('keeps content that is smaller than the view entirely inside it', () => {
     const view: Rect = { x: -500, y: 0, width: 2000, height: 1200 };
     const v = constrain({ x: 999, y: 999, k: 1 }, CONTENT, view, LIMITS);
-    expect(v.x).toBe(0);
+    expect(v.x).toBe(500); // right edge of the content on the right edge of the view
     expect(v.y).toBe(0);
+    // ...but it may move freely within the view
+    expect(constrain({ x: -200, y: 0, k: 1 }, CONTENT, view, LIMITS).x).toBe(-200);
   });
 
   it('stops edges from entering the view when zoomed in', () => {

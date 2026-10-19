@@ -3,8 +3,10 @@
 import { usePathname, useSearchParams } from 'next/navigation';
 import { useEffect, useMemo, useRef } from 'react';
 
-import type { Landmark } from '@/entities/landmark';
-import { findProvince, isProvinceId, type ProvinceId } from '@/entities/province';
+import type { LandmarkListItem } from '@/entities/landmark/model/landmark';
+import { findProvince, isProvinceId, type ProvinceId } from '@/entities/province/model/provinces';
+import { SITE } from '@/shared/config/site';
+import { cn } from '@/shared/lib/cn';
 
 import { useMapStore } from '../model/map-store';
 import { ProvinceDetails } from './province-details';
@@ -12,10 +14,11 @@ import { ProvinceDirectory } from './province-directory';
 import { VietnamMap } from './vietnam-map';
 
 interface MapExplorerProps {
-  readonly landmarks: readonly Landmark[];
+  readonly landmarks: readonly LandmarkListItem[];
 }
 
 const QUERY_KEY = 'tinh';
+const NO_LANDMARKS: readonly LandmarkListItem[] = [];
 
 /** Keeps the selected province in the URL (`?tinh=khanh-hoa`) so it can be shared and survives reloads. */
 function useSelectionUrlSync() {
@@ -50,51 +53,58 @@ export function MapExplorer({ landmarks }: MapExplorerProps) {
   useSelectionUrlSync();
   const selectedId = useMapStore((s) => s.selectedId);
   const select = useMapStore((s) => s.select);
+  const panelRef = useRef<HTMLElement>(null);
 
+  // One pass over the landmarks, then O(1) lookups per province.
   const byProvince = useMemo(() => {
-    const map = new Map<ProvinceId, Landmark[]>();
-    for (const l of landmarks) map.set(l.provinceId, [...(map.get(l.provinceId) ?? []), l]);
+    const map = new Map<ProvinceId, LandmarkListItem[]>();
+    for (const l of landmarks) {
+      const list = map.get(l.provinceId);
+      if (list) list.push(l);
+      else map.set(l.provinceId, [l]);
+    }
     return map;
   }, [landmarks]);
 
   const counts = useMemo(
-    () =>
-      Object.fromEntries([...byProvince].map(([id, list]) => [id, list.length])) as Partial<
-        Record<ProvinceId, number>
-      >,
+    () => new Map([...byProvince].map(([id, list]) => [id, list.length] as const)),
     [byProvince],
   );
 
   const selected = findProvince(selectedId);
-  const panelRef = useRef<HTMLElement>(null);
 
   return (
     <div className="relative flex h-dvh w-full flex-col overflow-hidden md:flex-row">
-      <div className="ocean relative min-h-0 flex-1">
+      <div className="relative min-h-0 flex-1">
         <VietnamMap occluderRef={panelRef} />
       </div>
 
       <aside
         ref={panelRef}
-        className="absolute inset-x-2 bottom-2 z-20 flex max-h-[55dvh] flex-col gap-3 rounded-3xl border-4 border-sand-300 bg-sand-50 p-4 shadow-2xl md:static md:inset-auto md:m-3 md:max-h-none md:w-[380px] md:shrink-0"
-        aria-label="Thông tin tỉnh"
+        aria-label={selected ? `Thông tin ${selected.name}` : 'Danh sách tỉnh, thành phố'}
+        className={cn(
+          'absolute inset-x-0 bottom-0 z-20 flex flex-col rounded-t-xl bg-paper pt-5 shadow-[0_-6px_24px_rgb(8_28_22/0.35)]',
+          'md:static md:max-h-none md:w-[380px] md:shrink-0 md:rounded-none md:shadow-[-6px_0_24px_rgb(8_28_22/0.35)]',
+          // The sheet stays short while browsing so the map stays visible on phones.
+          selected ? 'max-h-[56dvh]' : 'max-h-[42dvh]',
+        )}
       >
         {selected ? (
           <ProvinceDetails
             province={selected}
-            landmarks={byProvince.get(selected.id) ?? []}
-            onClose={() => {
+            landmarks={byProvince.get(selected.id) ?? NO_LANDMARKS}
+            onBack={() => {
               select(null);
             }}
           />
         ) : (
           <>
-            <div className="rounded-2xl bg-white p-4 shadow-sm">
-              <h1 className="font-display text-2xl font-extrabold text-ink">Chọn một tỉnh</h1>
-              <p className="mt-1 text-sm text-ink/70">
-                Chạm vào một tỉnh trên bản đồ hoặc tìm trong danh sách để xem các địa danh nổi bật.
+            <header className="mb-4 px-5">
+              <h1 className="text-2xl font-extrabold tracking-[-0.01em] type-wide">{SITE.name}</h1>
+              <p className="mt-1 max-w-[34ch] text-[15px] text-ink-muted">
+                Chọn một tỉnh trên bản đồ để xem các địa danh và mô hình 3D của tỉnh đó.
               </p>
-            </div>
+            </header>
             <ProvinceDirectory landmarkCounts={counts} onSelect={select} />
           </>
         )}

@@ -2,12 +2,12 @@
 
 import { useDeferredValue, useState } from 'react';
 
-import { type ProvinceId, PROVINCES, REGION_LABEL, REGIONS } from '@/entities/province';
-import { cn } from '@/shared/lib/cn';
+import { type ProvinceId, PROVINCES, REGION_LABEL, REGIONS } from '@/entities/province/model/provinces';
+import { RegionSwatch } from '@/entities/province/ui/region-swatch';
 import { normalizeVietnamese } from '@/shared/lib/text';
 
 interface ProvinceDirectoryProps {
-  readonly landmarkCounts: Readonly<Partial<Record<ProvinceId, number>>>;
+  readonly landmarkCounts: ReadonlyMap<ProvinceId, number>;
   readonly onSelect: (id: ProvinceId) => void;
 }
 
@@ -16,60 +16,65 @@ const SEARCH_INDEX = PROVINCES.map((p) => ({
   haystack: normalizeVietnamese([p.name, ...p.mergedFrom].join(' ')),
 }));
 
+/** Atlas-style index of all provinces, grouped by region, searchable without diacritics. */
 export function ProvinceDirectory({ landmarkCounts, onSelect }: ProvinceDirectoryProps) {
   const [query, setQuery] = useState('');
-  const deferred = useDeferredValue(query);
-  const needle = normalizeVietnamese(deferred);
+  const needle = normalizeVietnamese(useDeferredValue(query));
   const matches = needle ? SEARCH_INDEX.filter((e) => e.haystack.includes(needle)) : SEARCH_INDEX;
 
   return (
-    <div className="flex min-h-0 flex-1 flex-col gap-3">
-      <label className="block">
-        <span className="sr-only">Tìm tỉnh, thành</span>
+    <div className="flex min-h-0 flex-1 flex-col">
+      <label className="mx-5 block">
+        <span className="sr-only">Tìm tỉnh, thành phố</span>
         <input
           type="search"
           value={query}
           onChange={(e) => {
             setQuery(e.target.value);
           }}
-          placeholder="Tìm tỉnh… (vd: Đà Nẵng, Bình Dương)"
-          className="w-full rounded-2xl border-2 border-sand-300 bg-white px-4 py-2.5 text-sm text-ink shadow-inner outline-none placeholder:text-ink/40 focus:border-leaf-500"
+          placeholder="Tìm tỉnh, kể cả tên cũ như Bình Dương"
+          className="w-full rounded-md border border-rule bg-white px-3 py-2 text-[15px] text-ink outline-none placeholder:text-ink-muted/70 focus:border-ink"
         />
       </label>
 
-      <div className="-mr-2 min-h-0 flex-1 space-y-4 overflow-y-auto pr-2">
+      <div className="mt-4 min-h-0 flex-1 overflow-y-auto overscroll-contain px-5 pb-5">
+        {matches.length === 0 ? (
+          <p className="py-6 text-[15px] text-ink-muted">
+            Không có tỉnh nào khớp với “{query}”. Thử gõ không dấu, ví dụ “quang ngai”.
+          </p>
+        ) : null}
         {REGIONS.map((region) => {
           const items = matches.filter((m) => m.province.region === region);
           if (items.length === 0) return null;
           return (
-            <section key={region} aria-labelledby={`region-${region}`}>
-              <h3
+            <section key={region} aria-labelledby={`region-${region}`} className="mb-5 last:mb-0">
+              <h2
                 id={`region-${region}`}
-                className={cn(
-                  'mb-2 inline-block rounded-full px-2.5 py-0.5 text-xs font-bold text-white',
-                  region === 'north' && 'bg-leaf-600',
-                  region === 'central' && 'bg-amber-500',
-                  region === 'south' && 'bg-coral-500',
-                )}
+                className="flex items-center gap-2 border-b border-ink pb-1.5 text-sm font-semibold"
               >
+                <RegionSwatch region={region} />
                 {REGION_LABEL[region]}
-              </h3>
-              <ul className="grid grid-cols-2 gap-2">
+                <span className="ml-auto font-normal text-ink-muted tabular-nums">{items.length}</span>
+              </h2>
+              <ul>
                 {items.map(({ province }) => {
-                  const count = landmarkCounts[province.id] ?? 0;
+                  const count = landmarkCounts.get(province.id) ?? 0;
                   return (
-                    <li key={province.id}>
+                    <li key={province.id} className="border-b border-rule">
                       <button
                         type="button"
                         onClick={() => {
                           onSelect(province.id);
                         }}
-                        className="w-full rounded-2xl border-2 border-sand-200 bg-white px-3 py-2 text-left shadow-sm transition hover:-translate-y-0.5 hover:border-leaf-400 hover:shadow-md"
+                        className="flex w-full items-baseline gap-3 py-2 text-left text-[15px] transition-colors hover:text-select focus-visible:outline-offset-0"
                       >
-                        <span className="block font-display text-sm font-bold text-ink">{province.name}</span>
-                        <span className={cn('text-xs', count > 0 ? 'text-leaf-700' : 'text-ink/40')}>
-                          {count > 0 ? `${count} địa danh` : 'Chưa có địa danh'}
-                        </span>
+                        <span className="min-w-0 flex-1">{province.name}</span>
+                        {count > 0 ? (
+                          <span className="flex items-center gap-1 text-sm text-ink-muted tabular-nums">
+                            {count}
+                            <span className="sr-only">địa danh</span>
+                          </span>
+                        ) : null}
                       </button>
                     </li>
                   );
@@ -78,7 +83,6 @@ export function ProvinceDirectory({ landmarkCounts, onSelect }: ProvinceDirector
             </section>
           );
         })}
-        {matches.length === 0 && <p className="text-sm text-ink/60">Không tìm thấy tỉnh nào phù hợp.</p>}
       </div>
     </div>
   );

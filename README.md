@@ -9,9 +9,11 @@ Dự án được thiết kế để sau này có thể phát triển thành web
 Yêu cầu Node.js **22.11 trở lên** (xem `.nvmrc`).
 
 ```bash
-npm install
-npm run dev        # http://localhost:3000
+yarn               # hoặc npm install
+yarn dev           # http://localhost:3000
 ```
+
+Các lệnh bên dưới viết theo npm. Dùng yarn thì bỏ chữ `run` (`yarn check`, `yarn map:build`…).
 
 | Lệnh                                       | Việc                                                               |
 | ------------------------------------------ | ------------------------------------------------------------------ |
@@ -29,13 +31,19 @@ npm run dev        # http://localhost:3000
 
 - **Next.js 16** (App Router, Turbopack, Cache Components, typed routes) và **React 19**
 - **TypeScript 6** ở chế độ nghiêm ngặt nhất: `strict`, `noUncheckedIndexedAccess`, `exactOptionalPropertyTypes`, `noPropertyAccessFromIndexSignature`…
-- **Tailwind CSS v4**, font Be Vietnam Pro + Baloo 2 (tự host, không gọi Google Fonts)
+- **Tailwind CSS v4**, font Archivo dạng variable với trục độ rộng (tự host, không gọi Google Fonts)
 - **three.js + @react-three/fiber + drei** để xem mô hình 3D
 - **zustand** cho state phía client, **zod** để validate dữ liệu và biến môi trường
 - **d3-geo + topojson** chỉ dùng lúc build bản đồ, không đưa vào bundle trình duyệt
 - **Vitest**, **ESLint 9** (flat config), **Prettier**
 
 > TypeScript được ghim ở `~6.0` vì typescript-eslint chưa hỗ trợ TS 7. Khi typescript-eslint hỗ trợ thì có thể nâng lên.
+
+## Giao diện
+
+Ý tưởng là bàn làm mô hình. Bản đồ là các mảnh giấy cắt đặt trên tấm lót cắt màu xanh. Lưới trên tấm lót là lưới kinh, vĩ độ thật, cách nhau 0,5°. Khe hở giữa các mảnh giấy chính là đường biên tỉnh. Mỗi miền dùng một loại giấy (kraft, trắng, xanh xám). Tỉnh đang chọn được viền cam và nhấc lên khỏi mặt bàn, giống cách Blender viền object đang chọn. Trang địa danh đặt mô hình 3D lên cùng tấm lót đó.
+
+Chỉ dùng một họ chữ là Archivo, đổi độ rộng theo vai trò: bản hẹp (`type-narrow`) cho nhãn trên bản đồ, bản thường để đọc, bản rộng (`type-wide`) cho tên tỉnh và địa danh. Màu và font được khai báo trong `@theme` ở `src/app/globals.css`.
 
 ## Cấu trúc
 

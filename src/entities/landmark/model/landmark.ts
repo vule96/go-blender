@@ -45,3 +45,26 @@ export type LandmarkModel = z.infer<typeof LandmarkModelSchema>;
 export function hasModel(landmark: Landmark): landmark is Landmark & { model: LandmarkModel } {
   return landmark.model !== undefined;
 }
+
+/**
+ * What list views need to render a landmark. Client components receive this
+ * instead of the full record, so summaries and coordinates are not serialised
+ * into the map page's RSC payload.
+ */
+export interface LandmarkListItem {
+  readonly slug: LandmarkSlug;
+  readonly name: string;
+  readonly provinceId: Landmark['provinceId'];
+  readonly category: LandmarkCategory;
+  readonly hasModel: boolean;
+}
+
+export function toListItem(landmark: Landmark): LandmarkListItem {
+  return {
+    slug: landmark.slug,
+    name: landmark.name,
+    provinceId: landmark.provinceId,
+    category: landmark.category,
+    hasModel: hasModel(landmark),
+  };
+}

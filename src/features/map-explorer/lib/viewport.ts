@@ -44,18 +44,18 @@ export function panBy(v: Viewport, dx: number, dy: number): Viewport {
 }
 
 /**
- * Keep the content (`content`, before transform) inside the visible `view`.
- * Along an axis where the scaled content is smaller than the view it is
- * centred; otherwise its edges may not move inside the view.
+ * Keep the content (`content`, before transform) usefully in the visible `view`.
+ * Along an axis where the scaled content is smaller than the view, it may move
+ * but must stay entirely inside (so it can sit above a bottom sheet); where it
+ * is larger, its edges may not move inside the view.
  */
 export function constrain(v: Viewport, content: Rect, view: Rect, limits: ZoomLimits): Viewport {
   const k = clamp(v.k, limits.minK, limits.maxK);
   const axis = (pos: number, cStart: number, cSize: number, vStart: number, vSize: number): number => {
     const scaled = cSize * k;
-    if (scaled <= vSize) return vStart + (vSize - scaled) / 2 - cStart * k;
-    const min = vStart + vSize - (cStart + cSize) * k;
-    const max = vStart - cStart * k;
-    return clamp(pos, min, max);
+    const alignStart = vStart - cStart * k; // content's start edge on the view's start edge
+    const alignEnd = vStart + vSize - (cStart + cSize) * k; // content's end edge on the view's end edge
+    return scaled <= vSize ? clamp(pos, alignStart, alignEnd) : clamp(pos, alignEnd, alignStart);
   };
   return {
     k,

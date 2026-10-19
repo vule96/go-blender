@@ -4,14 +4,17 @@ import type { PanZoomControls } from '../hooks/use-pan-zoom';
 
 interface MapControlsProps {
   readonly controls: PanZoomControls;
+  /** Frame the whole country (the map knows about overlays; the hook does not). */
+  readonly onShowAll: () => void;
 }
 
 const BUTTON =
-  'grid size-10 place-items-center rounded-xl bg-white/90 text-lg font-bold text-ink shadow-md ring-1 ring-black/5 backdrop-blur transition hover:bg-white active:scale-95';
+  'grid size-9 place-items-center bg-paper text-ink transition-colors hover:bg-white active:bg-paper-white';
 
-export function MapControls({ controls }: MapControlsProps) {
+/** Zoom in, zoom out, show everything: three paper squares stacked into one strip. */
+export function MapControls({ controls, onShowAll }: MapControlsProps) {
   return (
-    <div className="pointer-events-auto flex flex-col gap-2">
+    <div className="pointer-events-auto flex flex-col divide-y divide-rule overflow-hidden rounded-md shadow-[2px_3px_0_rgb(8_28_22/0.45)]">
       <button
         type="button"
         className={BUTTON}
@@ -20,7 +23,15 @@ export function MapControls({ controls }: MapControlsProps) {
           controls.zoomBy(1.6);
         }}
       >
-        +
+        <svg
+          viewBox="0 0 16 16"
+          className="size-4"
+          stroke="currentColor"
+          strokeWidth="1.8"
+          aria-hidden="true"
+        >
+          <path d="M8 3v10M3 8h10" strokeLinecap="round" />
+        </svg>
       </button>
       <button
         type="button"
@@ -30,25 +41,30 @@ export function MapControls({ controls }: MapControlsProps) {
           controls.zoomBy(1 / 1.6);
         }}
       >
-        −
-      </button>
-      <button
-        type="button"
-        className={BUTTON}
-        aria-label="Xem toàn bộ bản đồ"
-        onClick={() => {
-          controls.reset();
-        }}
-      >
         <svg
-          viewBox="0 0 24 24"
-          className="size-5"
-          fill="none"
+          viewBox="0 0 16 16"
+          className="size-4"
           stroke="currentColor"
-          strokeWidth="2.2"
+          strokeWidth="1.8"
           aria-hidden="true"
         >
-          <path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5" strokeLinecap="round" strokeLinejoin="round" />
+          <path d="M3 8h10" strokeLinecap="round" />
+        </svg>
+      </button>
+      <button type="button" className={BUTTON} aria-label="Xem toàn bộ bản đồ" onClick={onShowAll}>
+        <svg
+          viewBox="0 0 16 16"
+          className="size-4"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="1.6"
+          aria-hidden="true"
+        >
+          <path
+            d="M2.5 6V2.5H6M13.5 6V2.5H10M2.5 10v3.5H6M13.5 10v3.5H10"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
         </svg>
       </button>
     </div>

@@ -3,7 +3,7 @@
 import { create } from 'zustand';
 import { subscribeWithSelector } from 'zustand/middleware';
 
-import type { ProvinceId } from '@/entities/province';
+import type { ProvinceId } from '@/entities/province/model/provinces';
 
 interface MapState {
   readonly selectedId: ProvinceId | null;

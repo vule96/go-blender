@@ -19,10 +19,15 @@ import path from 'node:path';
 
 import { geoMercator, geoPath } from 'd3-geo';
 import type { Feature, FeatureCollection, MultiPolygon, Polygon, Position } from 'geojson';
-import { feature, mesh } from 'topojson-client';
+import { feature, merge, mesh } from 'topojson-client';
 import { topology } from 'topojson-server';
 import { filter, filterWeight, presimplify, quantile, simplify, sphericalRingArea } from 'topojson-simplify';
-import type { GeometryCollection, Topology } from 'topojson-specification';
+import type {
+  GeometryCollection,
+  MultiPolygon as TopoMultiPolygon,
+  Polygon as TopoPolygon,
+  Topology,
+} from 'topojson-specification';
 
 import { type ProvinceId, PROVINCES } from '../../src/entities/province/model/provinces';
 
@@ -132,6 +137,10 @@ const VIEW_WIDTH = 1000;
 const PADDING = 24;
 const SIMPLIFY_QUANTILE = 0.12; // keep the top 12% most significant points
 const MIN_ISLAND_AREA_KM2 = 4; // drop islets smaller than this
+const GRATICULE_STEP = 0.5; // degrees
+// Wider than the country so the grid still covers the mat when the map is panned to an edge.
+const GRATICULE_LON: [number, number] = [94, 126];
+const GRATICULE_LAT: [number, number] = [-2, 30];
 
 type ProvinceGeometry = Polygon | MultiPolygon;
 type ProvinceFeature = Feature<ProvinceGeometry, { id: ProvinceId }>;
@@ -234,6 +243,19 @@ async function main(): Promise<void> {
   const object = topo.objects.provinces;
   const borders = toPath(mesh(topo, object, (a, b) => a !== b)) ?? '';
   const coastline = toPath(mesh(topo, object, (a, b) => a === b)) ?? '';
+  // The whole country as one shape: used for the paper's shadow on the mat.
+  const land =
+    geoPath(projection).digits(0)(merge(topo, object.geometries as (TopoPolygon | TopoMultiPolygon)[])) ?? ''; // a soft shadow needs no precision
+
+  // Graticule every half degree. Mercator keeps meridians vertical and parallels
+  // horizontal, so each line is fully described by one coordinate.
+  const steps = (from: number, to: number) =>
+    Array.from({ length: Math.round((to - from) / GRATICULE_STEP) + 1 }, (_, i) => from + i * GRATICULE_STEP);
+  const graticule = {
+    step: GRATICULE_STEP,
+    meridians: steps(...GRATICULE_LON).map((deg) => ({ deg, x: project(deg, 16)[0] })),
+    parallels: steps(...GRATICULE_LAT).map((deg) => ({ deg, y: project(108, deg)[1] })),
+  };
 
   const archipelagos = ARCHIPELAGOS.map((a) => {
     const points = a.islands.map(([lon, lat]) => project(lon, lat));
@@ -262,6 +284,8 @@ async function main(): Promise<void> {
     provinces: out,
     borders,
     coastline,
+    land,
+    graticule,
     archipelagos,
   };
 

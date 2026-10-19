@@ -1,8 +1,4 @@
-import '@fontsource/be-vietnam-pro/400.css';
-import '@fontsource/be-vietnam-pro/600.css';
-import '@fontsource/be-vietnam-pro/700.css';
-import '@fontsource/baloo-2/700.css';
-import '@fontsource/baloo-2/800.css';
+import '@fontsource-variable/archivo/wdth.css';
 import './globals.css';
 
 import type { Metadata, Viewport } from 'next';
@@ -12,13 +8,13 @@ import { SITE } from '@/shared/config/site';
 
 export const metadata: Metadata = {
   metadataBase: new URL(env.NEXT_PUBLIC_SITE_URL),
-  title: { default: `${SITE.name} · ${SITE.tagline}`, template: `%s · ${SITE.name}` },
+  title: { default: SITE.name, template: `%s | ${SITE.name}` },
   description: SITE.description,
   openGraph: { siteName: SITE.name, locale: SITE.locale, type: 'website' },
 };
 
 export const viewport: Viewport = {
-  themeColor: '#17607f',
+  themeColor: '#2e5e4e',
   width: 'device-width',
   initialScale: 1,
 };

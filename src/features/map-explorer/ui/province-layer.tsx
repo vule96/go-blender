@@ -1,15 +1,9 @@
 'use client';
 
-import { type KeyboardEvent, memo } from 'react';
+import { type CSSProperties, type KeyboardEvent, memo } from 'react';
 
-import {
-  findProvince,
-  isProvinceId,
-  type ProvinceId,
-  PROVINCES,
-  regionFill,
-  VIETNAM_MAP,
-} from '@/entities/province';
+import { getProvinceShape, VIETNAM_MAP } from '@/entities/province/data/vietnam-map';
+import { findProvince, isProvinceId, type ProvinceId } from '@/entities/province/model/provinces';
 
 interface ProvinceLayerProps {
   readonly selectedId: ProvinceId | null;
@@ -17,18 +11,33 @@ interface ProvinceLayerProps {
   readonly onHover: (id: ProvinceId | null) => void;
 }
 
-const FILLS = new Map(PROVINCES.map((p) => [p.id, regionFill(p.region, p.order)]));
-
 function provinceFromEvent(target: EventTarget | null): ProvinceId | null {
   const el = target instanceof Element ? target.closest<SVGElement>('[data-province]') : null;
   const id = el?.dataset['province'];
   return isProvinceId(id) ? id : null;
 }
 
+// Static per-province attributes, computed once. Neighbouring pieces get a
+// slightly different paper tone, like sheets cut from different stock.
+const PIECES = VIETNAM_MAP.provinces.map((shape) => {
+  const province = findProvince(shape.id);
+  return {
+    id: shape.id,
+    d: shape.d,
+    name: province?.name ?? shape.id,
+    region: province?.region,
+    style: { '--tone': (province?.order ?? 0) % 3 } as CSSProperties,
+  };
+});
+
+const landShadow = <path className="map-land-shadow" d={VIETNAM_MAP.land} />;
+const borders = <path className="map-borders" d={VIETNAM_MAP.borders} />;
+const coastline = <path className="map-coastline" d={VIETNAM_MAP.coastline} />;
+
 /**
- * All 34 provinces + borders + archipelagos. Events are delegated to the
- * group (one listener instead of 34), and hover styling is pure CSS, so
- * hovering never re-renders React.
+ * All 34 provinces, their borders and the two archipelagos. Events are
+ * delegated to the group (one listener instead of 34) and hover styling is
+ * pure CSS, so hovering never re-renders React.
  */
 export const ProvinceLayer = memo(function ProvinceLayer({
   selectedId,
@@ -44,10 +53,11 @@ export const ProvinceLayer = memo(function ProvinceLayer({
     }
   };
 
+  const selectedShape = selectedId ? getProvinceShape(selectedId) : undefined;
+
   return (
     <g
       className="map-provinces"
-      data-has-selection={selectedId ? 'true' : undefined}
       onClick={(e) => {
         const id = provinceFromEvent(e.target);
         if (id) onSelect(id);
@@ -60,40 +70,48 @@ export const ProvinceLayer = memo(function ProvinceLayer({
       }}
       onKeyDown={handleKey}
     >
-      <path className="map-coast-shadow" d={VIETNAM_MAP.coastline} />
-      {VIETNAM_MAP.provinces.map((shape) => {
-        const province = findProvince(shape.id);
-        return (
-          <path
-            key={shape.id}
-            d={shape.d}
-            data-province={shape.id}
-            data-selected={shape.id === selectedId ? 'true' : undefined}
-            className="map-province"
-            style={{ fill: FILLS.get(shape.id) }}
-            role="button"
-            tabIndex={0}
-            aria-label={province?.name ?? shape.id}
-            aria-pressed={shape.id === selectedId}
-          />
-        );
-      })}
-      <path className="map-borders" d={VIETNAM_MAP.borders} />
-      <path className="map-coastline" d={VIETNAM_MAP.coastline} />
+      {landShadow}
+      {PIECES.map((piece) => (
+        <path
+          key={piece.id}
+          d={piece.d}
+          data-province={piece.id}
+          data-region={piece.region}
+          className="map-province"
+          style={piece.style}
+          role="button"
+          tabIndex={0}
+          aria-label={piece.name}
+          aria-pressed={piece.id === selectedId}
+        />
+      ))}
+      {borders}
+      {coastline}
       {VIETNAM_MAP.archipelagos.map((a) => (
         <g
           key={a.id}
           data-province={a.belongsTo}
+          data-selected={a.belongsTo === selectedId || undefined}
           className="map-archipelago"
           role="button"
           tabIndex={0}
           aria-label={a.name}
         >
-          {a.islands.map(([x, y], i) => (
-            <circle key={i} cx={x} cy={y} r={2.2} className="map-island" />
+          {a.islands.map(([x, y]) => (
+            <circle key={`${String(x)},${String(y)}`} cx={x} cy={y} r={2.4} className="map-island" />
           ))}
         </g>
       ))}
+      {selectedShape ? (
+        // Re-keyed per province so the lift animation replays on every new selection.
+        <path
+          key={selectedShape.id}
+          d={selectedShape.d}
+          data-region={findProvince(selectedShape.id)?.region}
+          className="map-province-lifted"
+          aria-hidden="true"
+        />
+      ) : null}
     </g>
   );
 });

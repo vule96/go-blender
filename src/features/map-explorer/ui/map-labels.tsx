@@ -1,22 +1,32 @@
 import { type CSSProperties, memo } from 'react';
 
-import { findProvince, type ProvinceMeta, VIETNAM_MAP } from '@/entities/province';
+import { VIETNAM_MAP } from '@/entities/province/data/vietnam-map';
+import { findProvince, type ProvinceMeta } from '@/entities/province/model/provinces';
 
-/**
- * Small provinces in dense areas (Red River delta, Mekong delta) whose names
- * would collide at full view. They are revealed once the map is zoomed in.
- */
-const MINOR_LABEL_AREA = 5000;
-const MINOR_LABELS: ReadonlySet<string> = new Set(
-  VIETNAM_MAP.provinces
-    .filter(({ id, bounds: [x0, y0, x1, y1] }) => id !== 'ha-noi' && (x1 - x0) * (y1 - y0) < MINOR_LABEL_AREA)
-    .map((p) => p.id),
-);
+import { assignLabelTiers } from '../lib/label-tiers';
+
+const LABELS = VIETNAM_MAP.provinces
+  .map((shape) => {
+    const province: ProvinceMeta | undefined = findProvince(shape.id);
+    const [dx, dy] = province?.labelOffset ?? [0, 0];
+    const [x0, y0, x1, y1] = shape.bounds;
+    return {
+      id: shape.id,
+      text: province?.name ?? shape.id,
+      x: shape.label[0] + dx,
+      y: shape.label[1] + dy,
+      // Hà Nội is always placed first; then larger provinces win.
+      priority: shape.id === 'ha-noi' ? Infinity : (x1 - x0) * (y1 - y0),
+    };
+  })
+  .toSorted((a, b) => b.priority - a.priority);
+
+const LABEL_TIER = assignLabelTiers(LABELS);
 
 const SEA_LABELS = [
-  { text: 'BIỂN ĐÔNG', x: 800, y: 790, size: 26, spacing: 10 },
-  { text: 'Vịnh Bắc Bộ', x: 520, y: 290, size: 12, spacing: 2 },
-  { text: 'Vịnh Thái Lan', x: 110, y: 1090, size: 12, spacing: 2 },
+  { text: 'Biển Đông', x: 800, y: 790, size: 28, spacing: 6 },
+  { text: 'Vịnh Bắc Bộ', x: 520, y: 290, size: 13, spacing: 1.5 },
+  { text: 'Vịnh Thái Lan', x: 110, y: 1090, size: 13, spacing: 1.5 },
 ] as const;
 
 /** Province names, archipelago names and sea labels. Never intercepts pointer events. */
@@ -42,30 +52,27 @@ export const MapLabels = memo(function MapLabels() {
       {VIETNAM_MAP.archipelagos.map((a) => {
         const owner = findProvince(a.belongsTo);
         const [x0, , x1, y1] = a.bounds;
+        const cx = (x0 + x1) / 2;
         return (
-          <text key={a.id} x={(x0 + x1) / 2} y={y1 + 18} className="map-archipelago-label">
-            <tspan x={(x0 + x1) / 2}>{a.name}</tspan>
-            <tspan x={(x0 + x1) / 2} dy="1.2em" className="map-archipelago-owner">
-              ({owner?.name})
+          <text key={a.id} x={cx} y={y1 + 16} className="map-archipelago-label">
+            <tspan x={cx}>{a.name}</tspan>
+            <tspan x={cx} dy="1.25em" className="map-archipelago-owner">
+              {owner ? `thuộc ${owner.name}` : ''}
             </tspan>
           </text>
         );
       })}
-      {VIETNAM_MAP.provinces.map((shape) => {
-        const province: ProvinceMeta | undefined = findProvince(shape.id);
-        const [dx, dy] = province?.labelOffset ?? [0, 0];
-        return (
-          <text
-            key={shape.id}
-            x={shape.label[0] + dx}
-            y={shape.label[1] + dy}
-            className="map-province-label"
-            data-minor={MINOR_LABELS.has(shape.id) || undefined}
-          >
-            {province?.name}
-          </text>
-        );
-      })}
+      {LABELS.map((label) => (
+        <text
+          key={label.id}
+          x={label.x}
+          y={label.y}
+          className="map-province-label"
+          data-tier={LABEL_TIER.get(label.id)}
+        >
+          {label.text}
+        </text>
+      ))}
     </g>
   );
 });
