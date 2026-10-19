@@ -74,8 +74,9 @@ async function LandmarkContent({ params }: { readonly params: Params }) {
       </div>
 
       <article className="bg-sand-50 px-5 py-6 md:px-8 md:py-10">
-        <BackLink href={`/tinh/${province.id}`} className="text-ink-muted hover:text-ink">
-          {province.name}
+        {/* Back to the map (province still selected), where another province is one tap away. */}
+        <BackLink href={`/?tinh=${province.id}`} className="text-ink-muted hover:text-ink">
+          Bản đồ · {province.name}
         </BackLink>
 
         <h1 className="mt-3 font-display text-[clamp(2.25rem,3.6vw,3rem)] leading-[1.05] font-extrabold text-balance text-leaf-900">
