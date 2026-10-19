@@ -3,7 +3,8 @@ import type { LandmarkInput } from './landmark';
 /**
  * Seed data. Swap the repository implementation (see ../api) for a database or
  * CMS later; this list then becomes fixtures for tests and local development.
- * Coordinates are approximate (for "open in Google Maps" links).
+ * The "open in Google Maps" link searches by name (`mapsQuery` when the name
+ * alone is ambiguous); coordinates are kept for map pins and distance features.
  */
 export const LANDMARK_SEED = [
   {
@@ -14,6 +15,7 @@ export const LANDMARK_SEED = [
     summary:
       'Nhà thờ phong cách Gothic xây bằng đá trên một ngọn đồi nhỏ giữa trung tâm Nha Trang, nổi bật với tháp chuông có đồng hồ bốn mặt và cửa sổ kính màu.',
     coordinates: { lat: 12.2467361, lng: 109.1855508 },
+    mapsQuery: 'Nhà thờ Chánh Tòa Kitô Vua, Nha Trang',
     model: { path: '/models/nha-tho-nui.glb', sizeKb: 294 },
   },
   {
@@ -24,6 +26,7 @@ export const LANDMARK_SEED = [
     summary:
       'Quần thể đền tháp Chăm Pa trên đồi Cù Lao bên cửa sông Cái, Nha Trang, thờ nữ thần Po Inư Nagar. Phía dưới là sảnh cột (mandapa), bậc đá dẫn lên các tháp gạch, cao nhất là tháp Bắc khoảng 23 m.',
     coordinates: { lat: 12.2653717, lng: 109.1927929 },
+    mapsQuery: 'Tháp Bà Ponagar, Nha Trang',
     model: { path: '/models/thap-ba-ponagar.glb', sizeKb: 434 },
   },
   {
@@ -34,6 +37,7 @@ export const LANDMARK_SEED = [
     summary:
       'Ngôi chùa dưới chân đồi Trại Thủy, Nha Trang, lập từ cuối thế kỷ 19. Từ chánh điện mái cong, du khách leo khoảng 150 bậc lên đỉnh đồi, nơi tượng Kim Thân Phật Tổ trắng ngồi trên đài sen, cao 24 m.',
     coordinates: { lat: 12.2501855, lng: 109.1776004 },
+    mapsQuery: 'Chùa Long Sơn, Nha Trang',
     model: { path: '/models/chua-long-son.glb', sizeKb: 385 },
   },
   {
@@ -83,6 +87,7 @@ export const LANDMARK_SEED = [
     category: 'culture',
     summary: 'Thương cảng cổ với nhà gỗ, hội quán và đèn lồng, Di sản Văn hóa Thế giới.',
     coordinates: { lat: 15.8801, lng: 108.338 },
+    mapsQuery: 'Phố cổ Hội An',
   },
   {
     slug: 'nha-tho-duc-ba-sai-gon',
@@ -115,6 +120,7 @@ export const LANDMARK_SEED = [
     category: 'nature',
     summary: 'Quần thể danh thắng núi đá vôi, hang động và sông nước, Di sản hỗn hợp Thế giới.',
     coordinates: { lat: 20.2541, lng: 105.8972 },
+    mapsQuery: 'Khu du lịch sinh thái Tràng An, Ninh Bình',
   },
   {
     slug: 'dinh-fansipan',
@@ -131,6 +137,7 @@ export const LANDMARK_SEED = [
     category: 'nature',
     summary: 'Vườn quốc gia với hệ thống hang động đá vôi đồ sộ, Di sản Thiên nhiên Thế giới.',
     coordinates: { lat: 17.5905, lng: 106.2833 },
+    mapsQuery: 'Vườn quốc gia Phong Nha - Kẻ Bàng',
   },
   {
     slug: 'dao-phu-quoc',

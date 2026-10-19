@@ -35,6 +35,11 @@ export const LandmarkSchema = z.object({
   category: z.enum(LANDMARK_CATEGORIES),
   summary: z.string().min(1),
   coordinates: z.object({ lat: z.number().min(-90).max(90), lng: z.number().min(-180).max(180) }),
+  /**
+   * What to type into Google Maps to land on the place's own listing, when
+   * "<name>, <province>" isn't precise enough (e.g. the official name differs).
+   */
+  mapsQuery: z.string().min(1).optional(),
   model: LandmarkModelSchema.optional(),
 });
 

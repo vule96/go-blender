@@ -3,6 +3,7 @@ import { notFound } from 'next/navigation';
 import { Suspense } from 'react';
 
 import { landmarkRepository } from '@/entities/landmark/api/landmark-repository';
+import { googleMapsUrl } from '@/entities/landmark/lib/maps-url';
 import { hasModel, LANDMARK_CATEGORY_LABEL } from '@/entities/landmark/model/landmark';
 import { getProvince } from '@/entities/province/model/provinces';
 import { ModelViewer } from '@/features/model-viewer/ui/model-viewer';
@@ -42,8 +43,7 @@ async function LandmarkContent({ params }: { readonly params: Params }) {
   const province = getProvince(landmark.provinceId);
   const modelPath =
     hasModel(landmark) && (await assetExists(landmark.model.path)) ? landmark.model.path : null;
-  const { lat, lng } = landmark.coordinates;
-  const mapsUrl = `https://www.google.com/maps/search/?api=1&query=${String(lat)},${String(lng)}`;
+  const mapsUrl = googleMapsUrl(landmark, province.name);
 
   return (
     <>
@@ -104,7 +104,7 @@ async function LandmarkContent({ params }: { readonly params: Params }) {
 function LandmarkSkeleton() {
   return (
     <>
-      <div className="h-[58dvh] bg-[#bfe5f6] md:h-dvh" />
+      <div className="backdrop-base h-[58dvh] md:h-dvh" />
       <div className="bg-sand-50 px-5 py-6 md:px-8 md:py-10" aria-busy="true">
         <div className="h-4 w-20 rounded-md bg-sand-200" />
         <div className="mt-6 h-10 w-4/5 rounded-md bg-sand-200" />

@@ -10,12 +10,56 @@ import {
 } from '@react-three/drei';
 import { Canvas, useThree } from '@react-three/fiber';
 import { Component, type ReactNode, Suspense, useLayoutEffect, useMemo, useState } from 'react';
-import { Box3, type DirectionalLight, type OrthographicCamera, Sphere, Vector3 } from 'three';
+import {
+  Box3,
+  type DirectionalLight,
+  type OrthographicCamera,
+  setConsoleFunction,
+  Sphere,
+  Vector3,
+} from 'three';
+
+import type { Daypart } from '@/shared/lib/daypart';
 
 export interface ModelSceneProps {
   readonly url: string;
   readonly autoRotate?: boolean;
+  readonly daypart?: Daypart;
 }
+
+/*
+ * @react-three/fiber 9 (latest as of three r186) still creates a THREE.Clock,
+ * which three deprecated in r183 in favour of THREE.Timer. Drop that single
+ * warning until fiber moves to Timer; every other three.js message passes through.
+ */
+setConsoleFunction((type: 'log' | 'warn' | 'error', message: string, ...params: unknown[]) => {
+  if (type === 'warn' && message.startsWith('THREE.Clock:')) return;
+  console[type](message, ...params);
+});
+
+/** Light rigs that match the backdrop: warm sun by day, cool moonlight by night. */
+const LIGHTING = {
+  day: {
+    sky: '#e3f3ff',
+    ground: '#9cbf7e',
+    ambient: 1.1,
+    key: '#fff1da',
+    keyIntensity: 2.1,
+    environment: 1,
+    contactShadow: 0.35,
+  },
+  night: {
+    sky: '#7d93c9',
+    ground: '#1d2b26',
+    ambient: 0.55,
+    key: '#b9cbff',
+    keyIntensity: 0.9,
+    environment: 0.3,
+    contactShadow: 0.5,
+  },
+} as const satisfies Record<Daypart, unknown>;
+
+type Lighting = (typeof LIGHTING)[Daypart];
 
 /** Classic isometric view direction: 45° around, 35.26° above the horizon. */
 const ISO_DIRECTION = new Vector3(1, 1, 1).normalize();
@@ -71,7 +115,7 @@ function useIsometricFraming({ center, radius }: Framing) {
   }, [center, get, hasControls, height, radius, width]);
 }
 
-function Model({ url }: { readonly url: string }) {
+function Model({ url, lighting }: { readonly url: string; readonly lighting: Lighting }) {
   // (path, useDraco, useMeshopt): models are compressed with meshopt by
   // `gltf-transform optimize`, whose decoder ships with three — no CDN needed.
   const { scene } = useGLTF(url, false, true);
@@ -92,11 +136,11 @@ function Model({ url }: { readonly url: string }) {
   return (
     <>
       <primitive object={scene} />
-      <Sun center={center} radius={radius} />
+      <KeyLight center={center} radius={radius} color={lighting.key} intensity={lighting.keyIntensity} />
       {/* Soft shadow under the base: the diorama hovers in front of the backdrop. */}
       <ContactShadows
         position={[center.x, floorY - radius * 0.04, center.z]}
-        opacity={0.35}
+        opacity={lighting.contactShadow}
         scale={radius * 2.6}
         blur={2.8}
         far={radius * 0.5}
@@ -107,8 +151,15 @@ function Model({ url }: { readonly url: string }) {
   );
 }
 
-/** Warm key light whose shadow camera is sized to the model. */
-function Sun({ center, radius }: { readonly center: Vector3; readonly radius: number }) {
+interface KeyLightProps {
+  readonly center: Vector3;
+  readonly radius: number;
+  readonly color: string;
+  readonly intensity: number;
+}
+
+/** Sun or moon: the shadow-casting light, its shadow camera sized to the model. */
+function KeyLight({ center, radius, color, intensity }: KeyLightProps) {
   const position = useMemo(
     () => center.clone().add(new Vector3(-0.6, 1.1, 0.8).normalize().multiplyScalar(radius * 3)),
     [center, radius],
@@ -129,8 +180,8 @@ function Sun({ center, radius }: { readonly center: Vector3; readonly radius: nu
         cam.updateProjectionMatrix();
       }}
       position={position}
-      intensity={2.1}
-      color="#fff1da"
+      intensity={intensity}
+      color={color}
       castShadow
       shadow-mapSize={[1024, 1024]}
       shadow-bias={-0.0004}
@@ -194,7 +245,8 @@ function ErrorMessage({ title, children }: { readonly title: string; readonly ch
  * diorama style), drag to orbit 360°, scroll/pinch to zoom. The canvas is
  * transparent; the outdoor backdrop behind it is plain DOM/SVG.
  */
-export default function ModelScene({ url, autoRotate = true }: ModelSceneProps) {
+export default function ModelScene({ url, autoRotate = true, daypart = 'day' }: ModelSceneProps) {
+  const lighting = LIGHTING[daypart];
   const [interacting, setInteracting] = useState(false);
   const [failedUrl, setFailedUrl] = useState<string | null>(null);
 
@@ -225,7 +277,7 @@ export default function ModelScene({ url, autoRotate = true }: ModelSceneProps) 
           camera={{ position: [50, 50, 50], zoom: 10, near: 0.1, far: 1000 }}
           gl={{ antialias: true, alpha: true }}
         >
-          <hemisphereLight args={['#e3f3ff', '#9cbf7e', 1.1]} />
+          <hemisphereLight color={lighting.sky} groundColor={lighting.ground} intensity={lighting.ambient} />
           <ErrorBoundary
             fallback={null}
             onError={() => {
@@ -233,11 +285,11 @@ export default function ModelScene({ url, autoRotate = true }: ModelSceneProps) 
             }}
           >
             <Suspense fallback={null}>
-              <Model url={url} />
+              <Model url={url} lighting={lighting} />
             </Suspense>
           </ErrorBoundary>
           <Suspense fallback={null}>
-            <Environment resolution={256}>
+            <Environment resolution={256} environmentIntensity={lighting.environment}>
               <Lightformer
                 form="rect"
                 intensity={1.6}

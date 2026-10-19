@@ -255,27 +255,50 @@
 }
 
 /* ---------------------------------------------------------------- 3D page backdrop */
-.backdrop-cloud {
-  animation: cloud-drift linear infinite alternate;
+/* <html data-daypart> is set before first paint (DAYPART_SCRIPT) and kept in sync by useDaypart. */
+:root {
+  --backdrop-base: #a9cbe6;
 }
-.backdrop-cloud-slow {
-  animation-duration: 90s;
+:root[data-daypart='night'] {
+  --backdrop-base: #12244a;
 }
-.backdrop-cloud-fast {
-  animation-duration: 60s;
+
+.backdrop-base {
+  background-color: var(--backdrop-base);
+}
+
+.backdrop-day,
+.backdrop-night {
+  transition: opacity 3s ease;
+}
+.backdrop-night,
+:root[data-daypart='night'] .backdrop-day {
+  opacity: 0;
+}
+:root[data-daypart='night'] .backdrop-night {
+  opacity: 1;
+}
+
+.backdrop-drift {
+  animation: cloud-drift 150s linear infinite alternate;
+  will-change: transform;
 }
 
 @keyframes cloud-drift {
   from {
-    transform: translateX(-60px);
+    transform: translateX(-3%);
   }
   to {
-    transform: translateX(160px);
+    transform: translateX(5%);
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .backdrop-cloud {
+  .backdrop-drift {
     animation: none;
+  }
+  .backdrop-day,
+  .backdrop-night {
+    transition: none;
   }
 }

@@ -1,115 +1,316 @@
+import { BACKDROP, type Puff, VIEW_H, VIEW_W } from '@/features/model-viewer/lib/backdrop-geometry';
 import { cn } from '@/shared/lib/cn';
 
 /*
- * An illustrated outdoor scene behind the 3D canvas: sky, sun, drifting
- * clouds, far hills, a tree line and a meadow. It is plain SVG in the page,
- * entirely separate from the model, and costs nothing on the GPU.
- * Colours come from the map's palette (greens of the north, sand, sky blue).
+ * The landscape behind the 3D canvas, in two lights: day and night. Plain SVG
+ * in the page, fully separate from the model. Both variants are in the markup;
+ * CSS shows one from `<html data-daypart>` (set before first paint, then kept
+ * in sync by useDaypart) and cross-fades when the hour turns.
+ *
+ * Realism comes from atmospheric perspective (far ridges fade into a blue
+ * haze), procedural ridgelines, SVG turbulence for cloud edges, foliage and
+ * grass, and light that matches the sky (warm sun, cool moon).
  */
 
-interface Tree {
-  readonly x: number;
-  readonly y: number;
-  readonly s: number;
-  readonly tone: 0 | 1 | 2;
+interface Palette {
+  readonly id: 'day' | 'night';
+  readonly sky: readonly (readonly [offset: number, color: string])[];
+  readonly far: string;
+  readonly mid: string;
+  readonly hills: string;
+  readonly forest: string;
+  readonly meadowTop: string;
+  readonly meadowBottom: string;
+  readonly haze: string;
+  readonly hazeOpacity: number;
+  readonly cloudLit: string;
+  readonly cloudBase: string;
+  readonly cloudShade: string;
+  readonly cloudOpacity: number;
+  readonly grainOpacity: number;
 }
 
-const TREE_TONES = ['#5f9e45', '#4e8a3c', '#79b25e'] as const;
+const DAY: Palette = {
+  id: 'day',
+  sky: [
+    [0, '#2c68ae'],
+    [0.3, '#5a94d0'],
+    [0.56, '#9cc3e3'],
+    [0.68, '#cadeea'],
+    [1, '#e2e9e3'],
+  ],
+  far: '#9db5c6',
+  mid: '#7d9a9f',
+  hills: '#6b8a54',
+  forest: '#3b5c31',
+  meadowTop: '#7b994a',
+  meadowBottom: '#58763a',
+  haze: '#d5e3ea',
+  hazeOpacity: 0.75,
+  cloudLit: '#ffffff',
+  cloudBase: '#d3dde8',
+  cloudShade: '#9fb2c6',
+  cloudOpacity: 0.95,
+  grainOpacity: 0.22,
+};
 
-// Tree line along the middle hills (x, ground y, scale, tone).
-const TREES: readonly Tree[] = [
-  { x: 70, y: 640, s: 1.1, tone: 1 },
-  { x: 128, y: 632, s: 0.8, tone: 0 },
-  { x: 230, y: 626, s: 1.0, tone: 2 },
-  { x: 285, y: 630, s: 0.7, tone: 1 },
-  { x: 1180, y: 618, s: 1.2, tone: 0 },
-  { x: 1245, y: 624, s: 0.8, tone: 1 },
-  { x: 1300, y: 630, s: 1.0, tone: 2 },
-  { x: 1385, y: 636, s: 0.9, tone: 0 },
-  { x: 1450, y: 640, s: 1.15, tone: 1 },
-  { x: 1530, y: 646, s: 0.8, tone: 2 },
-];
+const NIGHT: Palette = {
+  id: 'night',
+  sky: [
+    [0, '#02050d'],
+    [0.32, '#071229'],
+    [0.56, '#102246'],
+    [0.68, '#1b335d'],
+    [1, '#223b66'],
+  ],
+  far: '#1a2946',
+  mid: '#142037',
+  hills: '#0f1a20',
+  forest: '#08110e',
+  meadowTop: '#111e18',
+  meadowBottom: '#09110d',
+  haze: '#2b426c',
+  hazeOpacity: 0.55,
+  cloudLit: '#3f5078',
+  cloudBase: '#24324f',
+  cloudShade: '#141d36',
+  cloudOpacity: 0.6,
+  grainOpacity: 0.12,
+};
 
-function TreeShape({ x, y, s, tone }: Tree) {
+const LAYER = 'pointer-events-none absolute inset-0 size-full select-none';
+const VIEW_BOX = `0 0 ${String(VIEW_W)} ${String(VIEW_H)}`;
+// Anchored to the bottom so the horizon stays put on any aspect ratio.
+const ASPECT = 'xMidYMax slice';
+
+function variant(p: Palette) {
+  return p.id === 'day' ? 'backdrop-day' : 'backdrop-night';
+}
+
+function Sky({ p }: { readonly p: Palette }) {
+  const id = `bd-sky-${p.id}`;
   return (
-    <g transform={`translate(${String(x)} ${String(y)}) scale(${String(s)})`}>
-      <rect x={-4} y={-26} width={8} height={28} rx={3} fill="#7a5a3c" />
-      <circle cx={0} cy={-46} r={26} fill={TREE_TONES[tone]} />
-      <circle cx={-15} cy={-34} r={17} fill={TREE_TONES[tone]} />
-      <circle cx={16} cy={-35} r={18} fill={TREE_TONES[tone]} />
-      <circle cx={-6} cy={-55} r={11} fill="#fff" opacity={0.12} />
+    <g className={variant(p)}>
+      <defs>
+        <linearGradient id={id} x1="0" y1="0" x2="0" y2="1">
+          {p.sky.map(([offset, color]) => (
+            <stop key={offset} offset={offset} stopColor={color} />
+          ))}
+        </linearGradient>
+      </defs>
+      <rect width={VIEW_W} height={VIEW_H} fill={`url(#${id})`} />
+      {p.id === 'day' ? <Sun /> : <NightSky />}
     </g>
   );
 }
 
-function Cloud({ className, scale = 1 }: { readonly className?: string; readonly scale?: number }) {
+function Sun() {
   return (
-    <g className={className}>
-      <g transform={`scale(${String(scale)})`}>
-        <path
-          d="M0 40c0-14 12-25 27-25 4-14 18-24 34-24 15 0 28 8 33 21 3-1 7-2 11-2 17 0 31 13 31 30z"
-          fill="#fff"
+    <>
+      <defs>
+        <radialGradient id="bd-sun-halo">
+          <stop offset="0" stopColor="#fffdf2" stopOpacity="0.95" />
+          <stop offset="0.1" stopColor="#fff6d6" stopOpacity="0.7" />
+          <stop offset="0.35" stopColor="#fff0c7" stopOpacity="0.18" />
+          <stop offset="1" stopColor="#fff0c7" stopOpacity="0" />
+        </radialGradient>
+      </defs>
+      <circle cx="1190" cy="120" r="380" fill="url(#bd-sun-halo)" />
+      <circle cx="1190" cy="120" r="24" fill="#fffef8" />
+    </>
+  );
+}
+
+function NightSky() {
+  return (
+    <>
+      <defs>
+        <radialGradient id="bd-moon-halo">
+          <stop offset="0" stopColor="#dfe7ff" stopOpacity="0.45" />
+          <stop offset="0.25" stopColor="#b9c9f0" stopOpacity="0.12" />
+          <stop offset="1" stopColor="#b9c9f0" stopOpacity="0" />
+        </radialGradient>
+        {/* Faint warm glow of a town beyond the mountains. */}
+        <radialGradient id="bd-town-glow" cx="0.5" cy="1" r="0.6">
+          <stop offset="0" stopColor="#e9a066" stopOpacity="0.28" />
+          <stop offset="1" stopColor="#e9a066" stopOpacity="0" />
+        </radialGradient>
+      </defs>
+      {BACKDROP.stars.map((s) => (
+        <circle
+          key={`${String(s.x)}:${String(s.y)}`}
+          cx={s.x}
+          cy={s.y}
+          r={s.r}
+          fill="#f4f6ff"
+          opacity={s.o}
         />
-        <path d="M0 40h136c0 6-6 10-14 10H12C5 50 0 46 0 40z" fill="#dcecf5" />
-      </g>
+      ))}
+      <ellipse cx="520" cy="560" rx="520" ry="150" fill="url(#bd-town-glow)" />
+      <circle cx="1170" cy="130" r="260" fill="url(#bd-moon-halo)" />
+      <circle cx="1170" cy="130" r="21" fill="#f3f0e4" />
+      <circle cx="1163" cy="124" r="5" fill="#dcd7c5" opacity="0.8" />
+      <circle cx="1177" cy="137" r="3.5" fill="#dcd7c5" opacity="0.7" />
+      <circle cx="1167" cy="140" r="2.5" fill="#dcd7c5" opacity="0.6" />
+    </>
+  );
+}
+
+function CloudShape({ puffs }: { readonly puffs: readonly Puff[] }) {
+  return (
+    <>
+      {puffs.map((c) => (
+        <ellipse key={`${String(c.cx)}:${String(c.cy)}`} cx={c.cx} cy={c.cy} rx={c.rx} ry={c.ry} />
+      ))}
+    </>
+  );
+}
+
+/** Vertical extent of a cloud, for its top-lit gradient. */
+function cloudSpan(puffs: readonly Puff[]) {
+  let top = Infinity;
+  let bottom = -Infinity;
+  for (const c of puffs) {
+    top = Math.min(top, c.cy - c.ry);
+    bottom = Math.max(bottom, c.cy + c.ry);
+  }
+  return { top, bottom };
+}
+
+function Clouds({ p }: { readonly p: Palette }) {
+  return (
+    <g className={variant(p)} opacity={p.cloudOpacity}>
+      {BACKDROP.cirrus.map(([cx, cy, rx, ry]) => (
+        <ellipse
+          key={`${String(cx)}:${String(cy)}`}
+          cx={cx}
+          cy={cy}
+          rx={rx}
+          ry={ry}
+          fill={p.cloudLit}
+          opacity={0.5}
+          filter="url(#bd-cirrus)"
+        />
+      ))}
+      {BACKDROP.clouds.map(({ key, puffs }) => {
+        const { top, bottom } = cloudSpan(puffs);
+        const gradient = `bd-cloud-${p.id}-${key}`;
+        return (
+          <g key={key}>
+            <defs>
+              {/* Lit from above: bright crown, greyer flat base. */}
+              <linearGradient id={gradient} gradientUnits="userSpaceOnUse" x1="0" y1={top} x2="0" y2={bottom}>
+                <stop offset="0.25" stopColor={p.cloudLit} />
+                <stop offset="1" stopColor={p.cloudBase} />
+              </linearGradient>
+            </defs>
+            {/* A soft, darker underside peeks out below the heap. */}
+            <g fill={p.cloudShade} transform="translate(0 7)" filter="url(#bd-cloud-shade)" opacity={0.8}>
+              <CloudShape puffs={puffs} />
+            </g>
+            <g fill={`url(#${gradient})`} filter="url(#bd-cloud)">
+              <CloudShape puffs={puffs} />
+            </g>
+          </g>
+        );
+      })}
     </g>
+  );
+}
+
+function Land({ p }: { readonly p: Palette }) {
+  const ids = {
+    haze: `bd-haze-${p.id}`,
+    meadow: `bd-meadow-${p.id}`,
+    clip: `bd-meadow-clip-${p.id}`,
+  };
+  return (
+    <g className={variant(p)}>
+      <defs>
+        <linearGradient id={ids.haze} x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" stopColor={p.haze} stopOpacity="0" />
+          <stop offset="1" stopColor={p.haze} stopOpacity={p.hazeOpacity} />
+        </linearGradient>
+        <linearGradient id={ids.meadow} x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" stopColor={p.meadowTop} />
+          <stop offset="1" stopColor={p.meadowBottom} />
+        </linearGradient>
+        <clipPath id={ids.clip}>
+          <path d={BACKDROP.meadow} />
+        </clipPath>
+      </defs>
+
+      <path d={BACKDROP.farMountains} fill={p.far} />
+      <rect y="470" width={VIEW_W} height="140" fill={`url(#${ids.haze})`} />
+      <path d={BACKDROP.midMountains} fill={p.mid} />
+      <rect y="540" width={VIEW_W} height="100" fill={`url(#${ids.haze})`} opacity="0.8" />
+      <path d={BACKDROP.hills} fill={p.hills} />
+      <path d={BACKDROP.forest} fill={p.forest} filter="url(#bd-foliage)" />
+      <rect y="620" width={VIEW_W} height="70" fill={`url(#${ids.haze})`} opacity="0.12" />
+      <path d={BACKDROP.meadow} fill={`url(#${ids.meadow})`} />
+      <rect
+        y="640"
+        width={VIEW_W}
+        height="260"
+        clipPath={`url(#${ids.clip})`}
+        filter="url(#bd-grain)"
+        opacity={p.grainOpacity}
+      />
+    </g>
+  );
+}
+
+/** Filters shared by both variants and all three layers (ids resolve document-wide). */
+function Filters() {
+  return (
+    <defs>
+      <filter id="bd-cloud" x="-30%" y="-80%" width="160%" height="260%">
+        <feTurbulence type="fractalNoise" baseFrequency="0.013" numOctaves="4" seed="8" />
+        <feDisplacementMap in="SourceGraphic" scale="44" xChannelSelector="R" yChannelSelector="G" />
+        <feGaussianBlur stdDeviation="2.4" />
+      </filter>
+      <filter id="bd-cloud-shade" x="-30%" y="-80%" width="160%" height="260%">
+        <feTurbulence type="fractalNoise" baseFrequency="0.013" numOctaves="4" seed="8" />
+        <feDisplacementMap in="SourceGraphic" scale="44" xChannelSelector="R" yChannelSelector="G" />
+        <feGaussianBlur stdDeviation="7" />
+      </filter>
+      <filter id="bd-cirrus" x="-20%" y="-400%" width="140%" height="900%">
+        <feTurbulence type="fractalNoise" baseFrequency="0.004 0.08" numOctaves="3" seed="3" />
+        <feDisplacementMap in="SourceGraphic" scale="26" xChannelSelector="R" yChannelSelector="G" />
+        <feGaussianBlur stdDeviation="3 1.5" />
+      </filter>
+      <filter id="bd-foliage" x="-2%" y="-20%" width="104%" height="140%">
+        <feTurbulence type="fractalNoise" baseFrequency="0.12" numOctaves="2" seed="5" />
+        <feDisplacementMap in="SourceGraphic" scale="7" xChannelSelector="R" yChannelSelector="G" />
+      </filter>
+      {/* Grass texture: horizontal-ish noise turned into dark speckles. */}
+      <filter id="bd-grain" x="0" y="0" width="100%" height="100%">
+        <feTurbulence type="fractalNoise" baseFrequency="0.7 0.16" numOctaves="2" seed="12" />
+        <feColorMatrix values="0 0 0 0 0  0 0 0 0 0.04  0 0 0 0 0  2.4 0 0 0 -1" />
+      </filter>
+    </defs>
   );
 }
 
 export function OutdoorBackdrop({ className }: { readonly className?: string }) {
   return (
-    <svg
-      viewBox="0 0 1600 900"
-      preserveAspectRatio="xMidYMax slice"
-      className={cn('pointer-events-none absolute inset-0 size-full select-none', className)}
-      aria-hidden="true"
-    >
-      <defs>
-        <linearGradient id="bd-sky" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0" stopColor="#7cc4ea" />
-          <stop offset="0.55" stopColor="#bfe5f6" />
-          <stop offset="0.78" stopColor="#eef7ee" />
-        </linearGradient>
-        <radialGradient id="bd-sun" cx="0.5" cy="0.5" r="0.5">
-          <stop offset="0" stopColor="#fff8dc" />
-          <stop offset="0.35" stopColor="#fff1b8" stopOpacity="0.9" />
-          <stop offset="1" stopColor="#fff1b8" stopOpacity="0" />
-        </radialGradient>
-        <linearGradient id="bd-meadow" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0" stopColor="#8cc46c" />
-          <stop offset="1" stopColor="#6fa955" />
-        </linearGradient>
-      </defs>
-
-      <rect width="1600" height="900" fill="url(#bd-sky)" />
-      <circle cx="1290" cy="170" r="150" fill="url(#bd-sun)" />
-
-      <Cloud className="backdrop-cloud backdrop-cloud-slow" scale={1.5} />
-      <g transform="translate(160 120)">
-        <Cloud className="backdrop-cloud backdrop-cloud-slow" scale={1.2} />
-      </g>
-      <g transform="translate(980 70)">
-        <Cloud className="backdrop-cloud backdrop-cloud-fast" scale={0.9} />
-      </g>
-      <g transform="translate(620 210)">
-        <Cloud className="backdrop-cloud backdrop-cloud-fast" scale={0.7} />
-      </g>
-
-      {/* Far range, hazy */}
-      <path
-        d="M0 600 C140 540 250 520 380 556 S620 500 760 540 1010 488 1160 528 1420 500 1600 548 V900 H0z"
-        fill="#b9dccb"
-      />
-      {/* Middle hills with the tree line */}
-      <path
-        d="M0 640 C180 600 330 610 470 640 S760 668 900 650 1150 602 1330 620 1520 642 1600 650 V900 H0z"
-        fill="#a6d38a"
-      />
-      {TREES.map((t) => (
-        <TreeShape key={`${String(t.x)}-${String(t.y)}`} {...t} />
-      ))}
-      {/* Meadow in front */}
-      <path d="M0 720 C260 690 520 700 800 716 S1340 700 1600 712 V900 H0z" fill="url(#bd-meadow)" />
-    </svg>
+    <div className={cn(LAYER, className)} aria-hidden="true">
+      <svg viewBox={VIEW_BOX} preserveAspectRatio={ASPECT} className={LAYER}>
+        <Filters />
+        <Sky p={DAY} />
+        <Sky p={NIGHT} />
+      </svg>
+      {/* Clouds sit on their own composited layer: drifting them moves pixels, it doesn't re-run the filters. */}
+      <div className="backdrop-drift pointer-events-none absolute inset-y-0 -right-[8%] -left-[8%]">
+        <svg viewBox={VIEW_BOX} preserveAspectRatio={ASPECT} className={LAYER}>
+          <Clouds p={DAY} />
+          <Clouds p={NIGHT} />
+        </svg>
+      </div>
+      <svg viewBox={VIEW_BOX} preserveAspectRatio={ASPECT} className={LAYER}>
+        <Land p={DAY} />
+        <Land p={NIGHT} />
+      </svg>
+    </div>
   );
 }
