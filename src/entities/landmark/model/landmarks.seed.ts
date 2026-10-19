@@ -49,7 +49,7 @@ export const LANDMARK_SEED = [
       'Tháp sáu tầng giữa Quảng trường 2/4 trên đường Trần Phú, nhìn ra vịnh Nha Trang, khánh thành năm 2008. Tháp mang dáng một nụ trầm với những cánh cong như cánh buồm, đứng trên bệ năm cạnh có phù điêu sóng biển.',
     coordinates: { lat: 12.2384, lng: 109.1968 },
     mapsQuery: 'Tháp Trầm Hương, Nha Trang',
-    model: { path: '/models/thap-tram-huong.glb', sizeKb: 243 },
+    model: { path: '/models/thap-tram-huong.glb', sizeKb: 444 },
   },
   {
     slug: 'nha-hat-do',
@@ -60,7 +60,7 @@ export const LANDMARK_SEED = [
       'Nhà hát bên vịnh Nha Trang, khu vực Bãi Tiên, lấy cảm hứng từ chiếc đó, ngư cụ đan bằng tre của người Việt. Hoạt động từ ngày 1/4/2023, khán phòng có 536 chỗ ngồi và một bể nước cho các tiết mục biểu diễn dưới nước.',
     coordinates: { lat: 12.2965, lng: 109.2135 },
     mapsQuery: 'Nhà hát Đó, Nha Trang',
-    model: { path: '/models/nha-hat-do.glb', sizeKb: 429 },
+    model: { path: '/models/nha-hat-do.glb', sizeKb: 402 },
   },
   {
     slug: 'ho-hoan-kiem',
