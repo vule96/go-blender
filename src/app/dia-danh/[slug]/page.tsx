@@ -9,7 +9,7 @@ import { getProvince } from '@/entities/province/model/provinces';
 import { DaypartToggle } from '@/features/model-viewer/ui/daypart-toggle';
 import { ModelViewer } from '@/features/model-viewer/ui/model-viewer';
 import { OutdoorBackdrop } from '@/features/model-viewer/ui/outdoor-backdrop';
-import { assetExists } from '@/shared/lib/asset-exists';
+import { checkAsset } from '@/shared/lib/asset-exists';
 import { assetUrl } from '@/shared/lib/asset-url';
 import { BackLink } from '@/shared/ui/back-link';
 
@@ -42,15 +42,16 @@ async function LandmarkContent({ params }: { readonly params: Params }) {
   if (!landmark) notFound();
 
   const province = getProvince(landmark.provinceId);
-  const modelPath =
-    hasModel(landmark) && (await assetExists(landmark.model.path)) ? landmark.model.path : null;
+  const modelAsset = hasModel(landmark) ? await checkAsset(landmark.model.path) : null;
+  const modelUrl =
+    hasModel(landmark) && modelAsset?.exists ? assetUrl(landmark.model.path, modelAsset.version) : null;
   const mapsUrl = googleMapsUrl(landmark, province.name);
 
   return (
     <>
       <div className="h-[58dvh] md:sticky md:top-0 md:h-dvh">
-        {modelPath ? (
-          <ModelViewer url={assetUrl(modelPath)} />
+        {modelUrl ? (
+          <ModelViewer url={modelUrl} />
         ) : (
           <div className="relative grid h-full place-items-center overflow-hidden p-6">
             <OutdoorBackdrop />
