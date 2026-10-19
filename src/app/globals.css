@@ -1,0 +1,183 @@
+@import 'tailwindcss';
+
+@theme {
+  --font-sans: 'Be Vietnam Pro', ui-sans-serif, system-ui, sans-serif;
+  --font-display: 'Baloo 2', 'Be Vietnam Pro', ui-sans-serif, sans-serif;
+
+  --color-ink: #2b2620;
+
+  --color-sand-50: #fbf6ea;
+  --color-sand-100: #f6eedb;
+  --color-sand-200: #efe3c6;
+  --color-sand-300: #e4d3aa;
+
+  --color-leaf-400: #7cc35a;
+  --color-leaf-500: #5daa3f;
+  --color-leaf-600: #3f8f2f;
+  --color-leaf-700: #2f6f2a;
+  --color-leaf-900: #1f4a1d;
+
+  --color-coral-500: #e8774f;
+
+  --color-ocean-500: #2b8fae;
+  --color-ocean-700: #17607f;
+  --color-ocean-900: #0b3350;
+}
+
+@layer base {
+  html {
+    color-scheme: light;
+  }
+
+  body {
+    @apply bg-sand-100 font-sans text-ink antialiased;
+  }
+}
+
+/* ---------------------------------------------------------------- ocean */
+.ocean {
+  background: radial-gradient(120% 95% at 42% 40%, #2b8fae 0%, #17607f 55%, #0b3350 100%);
+}
+
+/* ---------------------------------------------------------------- map */
+.map-svg {
+  --map-k: 1;
+  cursor: grab;
+}
+
+.map-svg[data-dragging] {
+  cursor: grabbing;
+}
+
+.map-grid {
+  fill: none;
+  stroke: rgb(255 255 255 / 0.06);
+  stroke-width: 1;
+  vector-effect: non-scaling-stroke;
+  pointer-events: none;
+}
+
+.map-coast-shadow {
+  fill: rgb(5 35 55 / 0.4);
+  stroke: rgb(155 231 242 / 0.22);
+  stroke-width: 8;
+  stroke-linejoin: round;
+  vector-effect: non-scaling-stroke;
+  transform: translate(0, 3px);
+  pointer-events: none;
+}
+
+.map-province {
+  cursor: pointer;
+  stroke: transparent;
+  transition:
+    opacity 200ms ease,
+    filter 150ms ease;
+  outline: none;
+}
+
+.map-province:hover {
+  filter: brightness(1.08) saturate(1.12);
+}
+
+.map-province:focus-visible,
+.map-province[data-selected] {
+  stroke: #fff;
+  stroke-width: 2.5;
+  vector-effect: non-scaling-stroke;
+  paint-order: stroke;
+}
+
+.map-provinces[data-has-selection] .map-province:not([data-selected]) {
+  opacity: 0.55;
+}
+
+.map-borders {
+  fill: none;
+  stroke: rgb(255 255 255 / 0.8);
+  stroke-width: 0.8;
+  stroke-linejoin: round;
+  vector-effect: non-scaling-stroke;
+  pointer-events: none;
+}
+
+.map-coastline {
+  fill: none;
+  stroke: rgb(255 255 255 / 0.95);
+  stroke-width: 1.3;
+  stroke-linejoin: round;
+  vector-effect: non-scaling-stroke;
+  pointer-events: none;
+}
+
+.map-archipelago {
+  cursor: pointer;
+  outline: none;
+}
+
+.map-island {
+  fill: #f6e7b0;
+  stroke: rgb(255 255 255 / 0.9);
+  stroke-width: 0.8;
+  vector-effect: non-scaling-stroke;
+  transition: fill 150ms ease;
+}
+
+.map-archipelago:hover .map-island,
+.map-archipelago:focus-visible .map-island {
+  fill: #ffd66b;
+}
+
+/* Labels shrink as you zoom in (sub-linear) so they stay readable at any scale. */
+.map-labels text {
+  pointer-events: none;
+  text-anchor: middle;
+  dominant-baseline: middle;
+  paint-order: stroke;
+  stroke-linejoin: round;
+}
+
+.map-province-label {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: calc(12.5px / pow(var(--map-k), 0.65));
+  fill: var(--color-ink);
+  stroke: rgb(255 255 255 / 0.9);
+  stroke-width: calc(3px / pow(var(--map-k), 0.65));
+  transition: opacity 200ms ease;
+}
+
+.map-svg:not([data-zoom='detail']) .map-province-label[data-minor] {
+  opacity: 0;
+}
+
+.map-archipelago-label {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: calc(11px / pow(var(--map-k), 0.6));
+  fill: #fff;
+  stroke: rgb(11 51 80 / 0.7);
+  stroke-width: calc(3px / pow(var(--map-k), 0.6));
+}
+
+.map-archipelago-owner {
+  font-weight: 500;
+  font-size: 0.85em;
+}
+
+.map-sea-label {
+  font-family: var(--font-display);
+  font-weight: 800;
+  /* Sea names belong to the overview: they shrink faster than province names when zooming in. */
+  font-size: calc(var(--label-size) / var(--map-k));
+  letter-spacing: calc(var(--label-spacing) / var(--map-k));
+  fill: rgb(255 255 255 / 0.45);
+  stroke: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .map-province,
+  .map-island {
+    transition: none;
+  }
+}
