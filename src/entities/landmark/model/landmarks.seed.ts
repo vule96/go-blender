@@ -14,7 +14,7 @@ export const LANDMARK_SEED = [
     summary:
       'Nhà thờ phong cách Gothic xây bằng đá trên một ngọn đồi nhỏ giữa trung tâm Nha Trang, nổi bật với tháp chuông có đồng hồ bốn mặt và cửa sổ kính màu.',
     coordinates: { lat: 12.2466, lng: 109.1886 },
-    // Model pending: export the Blender scene to /models/nha-tho-nui.glb, then add `model` here.
+    model: { path: '/models/nha-tho-nui.glb', sizeKb: 411 },
   },
   {
     slug: 'thap-ba-ponagar',

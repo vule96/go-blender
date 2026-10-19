@@ -72,7 +72,7 @@ Chi tiết xem [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md). Hướng phát tri�
 
 ## Thêm địa danh và mô hình 3D
 
-File Blender gốc của các mô hình đã có nằm ở `blender/nha-trang-landmarks.blend` (mỗi mô hình là một collection).
+File Blender gốc nằm trong `blender/`: `nha-trang-landmarks.blend` (Chùa Long Sơn, Tháp Bà Ponagar) và `morning-models.blend` (Nhà thờ Núi cùng các mẫu thử khác). Mỗi mô hình là một collection.
 
 1. **Xuất từ Blender:** File → Export → glTF 2.0, chọn Format **glTF Binary (.glb)**, tích _Apply Modifiers_. Chỉ chọn mesh, bỏ camera và đèn.
 2. **Nén:**

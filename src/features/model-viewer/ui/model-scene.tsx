@@ -135,7 +135,7 @@ export default function ModelScene({ url, autoRotate = true }: ModelSceneProps) 
             }}
           >
             <Suspense fallback={null}>
-              <Bounds fit clip observe margin={1.15}>
+              <Bounds fit clip observe margin={1.3}>
                 <Model url={url} />
               </Bounds>
             </Suspense>
