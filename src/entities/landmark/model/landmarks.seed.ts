@@ -94,16 +94,33 @@ export const LANDMARK_SEED = [
     name: 'Nhà thờ Đức Bà Sài Gòn',
     provinceId: 'tp-ho-chi-minh',
     category: 'religious',
-    summary: 'Vương cung thánh đường gạch đỏ với hai tháp chuông, biểu tượng của trung tâm thành phố.',
+    summary:
+      'Vương cung thánh đường xây từ năm 1877 đến 1880 bằng gạch đỏ nhập từ Pháp, để trần không tô trát. Hai tháp chuông cao 57,6 m (60,5 m tính cả thánh giá), giữa hai tháp là đồng hồ Thụy Sĩ làm năm 1887; phía trước là tượng Đức Mẹ Hòa Bình.',
     coordinates: { lat: 10.7798, lng: 106.699 },
+    mapsQuery: 'Nhà thờ Đức Bà Sài Gòn',
+    model: { path: '/models/nha-tho-duc-ba.glb', sizeKb: 446 },
   },
   {
     slug: 'dinh-doc-lap',
     name: 'Dinh Độc Lập',
     provinceId: 'tp-ho-chi-minh',
     category: 'historical',
-    summary: 'Công trình kiến trúc hiện đại thập niên 1960, gắn với sự kiện thống nhất đất nước năm 1975.',
+    summary:
+      'Công trình do kiến trúc sư Ngô Viết Thụ thiết kế, khánh thành năm 1966, gắn với sự kiện thống nhất đất nước năm 1975. Mặt tiền nổi bật với "rèm hoa đá", phía trước là bãi cỏ hình bầu dục và hồ bán nguyệt trồng sen.',
     coordinates: { lat: 10.777, lng: 106.6953 },
+    mapsQuery: 'Dinh Độc Lập',
+    model: { path: '/models/dinh-doc-lap.glb', sizeKb: 332 },
+  },
+  {
+    slug: 'cho-ben-thanh',
+    name: 'Chợ Bến Thành',
+    provinceId: 'tp-ho-chi-minh',
+    category: 'culture',
+    summary:
+      'Khu chợ rộng hơn 13.000 m² ở trung tâm thành phố, khánh thành năm 1914, với 16 cửa và bốn cửa chính. Cửa Nam nhìn ra công trường Quách Thị Trang là biểu tượng của Sài Gòn; buổi tối, chợ đêm họp ở hai con đường bên hông.',
+    coordinates: { lat: 10.7725, lng: 106.698 },
+    mapsQuery: 'Chợ Bến Thành',
+    model: { path: '/models/cho-ben-thanh.glb', sizeKb: 392 },
   },
   {
     slug: 'ho-xuan-huong',

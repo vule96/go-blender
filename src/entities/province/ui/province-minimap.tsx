@@ -23,6 +23,19 @@ const LABELS = VIETNAM_MAP.provinces.map((p) => {
   return { id: p.id, name: province?.name ?? p.id, x: p.label[0] + dx, y: p.label[1] + dy };
 });
 
+type Label = (typeof LABELS)[number];
+
+/**
+ * Whether a neighbour's name would sit under the (larger) selected name. Text
+ * widths are estimated from the character count at the largest (phone) size.
+ */
+function overlapsSelected(label: Label, selected: Label | undefined, size: number): boolean {
+  if (!selected) return false;
+  const charWidth = size * 0.038 * 0.58;
+  const halfWidths = (selected.name.length * 1.45 + label.name.length) * charWidth * 0.5;
+  return Math.abs(label.x - selected.x) < halfWidths && Math.abs(label.y - selected.y) < size * 0.07;
+}
+
 /**
  * Server-rendered locator: the province in full colour and lifted, its
  * neighbours faded, each named so the reader knows what surrounds it.
@@ -32,6 +45,7 @@ export function ProvinceMinimap({ provinceId, className }: ProvinceMinimapProps)
   if (!shape) return null;
 
   const [x0, y0, x1, y1] = shape.bounds;
+  const selected = LABELS.find((l) => l.id === provinceId);
   const size = Math.max(x1 - x0, y1 - y0) * 1.8 + 40;
   const cx = (x0 + x1) / 2;
   const cy = (y0 + y1) / 2;
@@ -77,7 +91,11 @@ export function ProvinceMinimap({ provinceId, className }: ProvinceMinimapProps)
       {/* Font size is in map units, proportional to the framed area (see .minimap-labels), so names keep the same on-screen size for any province. */}
       <g className="minimap-labels" aria-hidden="true" style={{ '--minimap-size': size } as CSSProperties}>
         {LABELS.filter(
-          (l) => l.id !== provinceId && Math.abs(l.x - cx) < size * 0.46 && Math.abs(l.y - cy) < size * 0.48,
+          (l) =>
+            l.id !== provinceId &&
+            Math.abs(l.x - cx) < size * 0.46 &&
+            Math.abs(l.y - cy) < size * 0.48 &&
+            !overlapsSelected(l, selected, size),
         ).map((l) => (
           <text key={l.id} x={l.x} y={l.y} className="minimap-label">
             {l.name}
