@@ -298,7 +298,7 @@
 
 .backdrop-day,
 .backdrop-night {
-  transition: opacity 3s ease;
+  transition: opacity 1.2s ease;
 }
 .backdrop-night,
 :root[data-daypart='night'] .backdrop-day {

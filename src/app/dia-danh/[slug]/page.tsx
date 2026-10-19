@@ -6,6 +6,7 @@ import { landmarkRepository } from '@/entities/landmark/api/landmark-repository'
 import { googleMapsUrl } from '@/entities/landmark/lib/maps-url';
 import { hasModel, LANDMARK_CATEGORY_LABEL } from '@/entities/landmark/model/landmark';
 import { getProvince } from '@/entities/province/model/provinces';
+import { DaypartToggle } from '@/features/model-viewer/ui/daypart-toggle';
 import { ModelViewer } from '@/features/model-viewer/ui/model-viewer';
 import { OutdoorBackdrop } from '@/features/model-viewer/ui/outdoor-backdrop';
 import { assetExists } from '@/shared/lib/asset-exists';
@@ -53,6 +54,7 @@ async function LandmarkContent({ params }: { readonly params: Params }) {
         ) : (
           <div className="relative grid h-full place-items-center overflow-hidden p-6">
             <OutdoorBackdrop />
+            <DaypartToggle className="absolute top-3 right-3" />
             <div className="relative max-w-xs rounded-2xl border-4 border-sand-300 bg-sand-50 p-4 text-[15px] shadow-xl">
               <p className="font-display text-lg font-bold">Chưa có mô hình 3D</p>
               <p className="mt-1 text-ink-muted">

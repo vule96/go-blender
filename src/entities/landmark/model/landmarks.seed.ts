@@ -41,6 +41,28 @@ export const LANDMARK_SEED = [
     model: { path: '/models/chua-long-son.glb', sizeKb: 385 },
   },
   {
+    slug: 'thap-tram-huong',
+    name: 'Tháp Trầm Hương',
+    provinceId: 'khanh-hoa',
+    category: 'architecture',
+    summary:
+      'Tháp sáu tầng giữa Quảng trường 2/4 trên đường Trần Phú, nhìn ra vịnh Nha Trang, khánh thành năm 2008. Tháp mang dáng một nụ trầm với những cánh cong như cánh buồm, đứng trên bệ năm cạnh có phù điêu sóng biển.',
+    coordinates: { lat: 12.2384, lng: 109.1968 },
+    mapsQuery: 'Tháp Trầm Hương, Nha Trang',
+    model: { path: '/models/thap-tram-huong.glb', sizeKb: 243 },
+  },
+  {
+    slug: 'nha-hat-do',
+    name: 'Nhà hát Đó',
+    provinceId: 'khanh-hoa',
+    category: 'culture',
+    summary:
+      'Nhà hát bên vịnh Nha Trang, khu vực Bãi Tiên, lấy cảm hứng từ chiếc đó, ngư cụ đan bằng tre của người Việt. Hoạt động từ ngày 1/4/2023, khán phòng có 536 chỗ ngồi và một bể nước cho các tiết mục biểu diễn dưới nước.',
+    coordinates: { lat: 12.2965, lng: 109.2135 },
+    mapsQuery: 'Nhà hát Đó, Nha Trang',
+    model: { path: '/models/nha-hat-do.glb', sizeKb: 429 },
+  },
+  {
     slug: 'ho-hoan-kiem',
     name: 'Hồ Hoàn Kiếm',
     provinceId: 'ha-noi',
@@ -121,6 +143,39 @@ export const LANDMARK_SEED = [
     coordinates: { lat: 10.7725, lng: 106.698 },
     mapsQuery: 'Chợ Bến Thành',
     model: { path: '/models/cho-ben-thanh.glb', sizeKb: 392 },
+  },
+  {
+    slug: 'nha-hat-thanh-pho',
+    name: 'Nhà hát Thành phố',
+    provinceId: 'tp-ho-chi-minh',
+    category: 'architecture',
+    summary:
+      'Nhà hát kiểu Pháp do kiến trúc sư Félix Olivier thiết kế, khởi công năm 1898 và hoàn thành đầu năm 1900, nằm trên công trường Lam Sơn. Mặt tiền màu kem nổi bật với vòm cửa lớn ở giữa, hai pho tượng hai bên và nhiều phù điêu trang trí.',
+    coordinates: { lat: 10.7767, lng: 106.7032 },
+    mapsQuery: 'Nhà hát Thành phố Hồ Chí Minh',
+    model: { path: '/models/nha-hat-thanh-pho.glb', sizeKb: 407 },
+  },
+  {
+    slug: 'ben-nha-rong',
+    name: 'Bến Nhà Rồng',
+    provinceId: 'tp-ho-chi-minh',
+    category: 'historical',
+    summary:
+      'Tòa nhà do người Pháp xây năm 1863 bên sông Sài Gòn, từng là trụ sở Thương cảng Sài Gòn, nay là Bảo tàng Hồ Chí Minh. Trên nóc mái có cặp rồng chầu mặt trăng ("lưỡng long chầu nguyệt"), nơi tòa nhà có tên gọi Nhà Rồng.',
+    coordinates: { lat: 10.7682, lng: 106.7068 },
+    mapsQuery: 'Bến Nhà Rồng',
+    model: { path: '/models/ben-nha-rong.glb', sizeKb: 370 },
+  },
+  {
+    slug: 'nha-tho-tan-dinh',
+    name: 'Nhà thờ Tân Định',
+    provinceId: 'tp-ho-chi-minh',
+    category: 'religious',
+    summary:
+      'Nhà thờ trên đường Hai Bà Trưng, khánh thành năm 1876, được sơn màu hồng cả trong lẫn ngoài từ năm 1957. Kiến trúc chủ yếu theo lối Roman với cửa vòm tròn; tháp chuông chính cao 52,6 m ở giữa mặt tiền.',
+    coordinates: { lat: 10.7884, lng: 106.6907 },
+    mapsQuery: 'Nhà thờ Tân Định',
+    model: { path: '/models/nha-tho-tan-dinh.glb', sizeKb: 402 },
   },
   {
     slug: 'ho-xuan-huong',

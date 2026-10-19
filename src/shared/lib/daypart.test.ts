@@ -32,7 +32,7 @@ describe('parseDaypart', () => {
 });
 
 /** Runs the inline script in a sandbox with a fake clock and URL. */
-function runScript(hour: number, search = ''): string | undefined {
+function runScript(hour: number, search = '', stored: string | null = null): string | undefined {
   const root = { dataset: {} as Record<string, string> };
   class FixedDate {
     getHours() {
@@ -44,6 +44,7 @@ function runScript(hour: number, search = ''): string | undefined {
     location: { search },
     Date: FixedDate,
     URLSearchParams,
+    sessionStorage: { getItem: () => stored },
   });
   return root.dataset['daypart'];
 }
@@ -53,6 +54,16 @@ describe('DAYPART_SCRIPT', () => {
     for (const hour of [0, 5, 6, 12, 17, 18, 23]) {
       expect(runScript(hour)).toBe(daypartAt(at(hour)));
     }
+  });
+
+  it("uses the visitor's pick over the clock, and the URL over both", () => {
+    expect(runScript(12, '', 'night')).toBe('night');
+    expect(runScript(22, '', 'day')).toBe('day');
+    expect(runScript(22, '?daypart=night', 'day')).toBe('night');
+  });
+
+  it('ignores an unreadable or invalid stored pick', () => {
+    expect(runScript(12, '', 'dusk')).toBe('day');
   });
 
   it('honours the URL override', () => {

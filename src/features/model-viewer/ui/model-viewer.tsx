@@ -4,6 +4,7 @@ import dynamic from 'next/dynamic';
 
 import { useDaypart } from '@/shared/lib/use-daypart';
 
+import { DaypartToggle } from './daypart-toggle';
 import type { ModelSceneProps } from './model-scene';
 import { OutdoorBackdrop } from './outdoor-backdrop';
 
@@ -23,6 +24,7 @@ export function ModelViewer(props: Omit<ModelSceneProps, 'daypart'>) {
       <div className="absolute inset-0">
         <ModelScene {...props} daypart={daypart} />
       </div>
+      <DaypartToggle className="absolute top-3 right-3" />
       <p className="pointer-events-none absolute bottom-3 left-1/2 -translate-x-1/2 rounded-full bg-black/35 px-3 py-1 text-xs whitespace-nowrap text-white backdrop-blur">
         Kéo để xoay, cuộn hoặc chụm hai ngón để phóng to
       </p>
