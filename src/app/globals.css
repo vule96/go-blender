@@ -254,6 +254,35 @@
   }
 }
 
+/* ---------------------------------------------------------------- province page minimap */
+/* Inside the SVG, px are map units: scale with the framed area, larger on narrow screens. */
+.minimap-labels {
+  font-size: calc(var(--minimap-size) * 0.024px);
+}
+@media (max-width: 767px) {
+  .minimap-labels {
+    font-size: calc(var(--minimap-size) * 0.038px);
+  }
+}
+.minimap-label {
+  font-family: var(--font-display);
+  font-weight: 700;
+  text-anchor: middle;
+  dominant-baseline: middle;
+  fill: var(--color-ink);
+  fill-opacity: 0.75;
+  stroke: rgb(255 255 255 / 0.75);
+  stroke-width: 0.25em;
+  stroke-linejoin: round;
+  paint-order: stroke;
+  pointer-events: none;
+}
+.minimap-label-selected {
+  font-size: 1.45em;
+  fill-opacity: 1;
+  stroke: rgb(255 255 255 / 0.95);
+}
+
 /* ---------------------------------------------------------------- 3D page backdrop */
 /* <html data-daypart> is set before first paint (DAYPART_SCRIPT) and kept in sync by useDaypart. */
 :root {
