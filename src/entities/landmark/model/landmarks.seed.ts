@@ -71,6 +71,17 @@ export const LANDMARK_SEED = [
     coordinates: { lat: 21.0287, lng: 105.8524 },
   },
   {
+    slug: 'nha-tho-lon-ha-noi',
+    name: 'Nhà thờ Lớn Hà Nội',
+    provinceId: 'ha-noi',
+    category: 'religious',
+    summary:
+      'Nhà thờ chính tòa Thánh Giuse ở số 40 phố Nhà Chung, khánh thành dịp Giáng sinh năm 1886. Công trình theo phong cách Gothic, dài 64,5 m, rộng 20,5 m, với hai tháp chuông cao 31,5 m, mặt tiền có cửa sổ hoa hồng và đồng hồ; phía trước là tượng Đức Mẹ.',
+    coordinates: { lat: 21.0287, lng: 105.849 },
+    mapsQuery: 'Nhà thờ Lớn Hà Nội',
+    model: { path: '/models/nha-tho-lon-ha-noi.glb', sizeKb: 468 },
+  },
+  {
     slug: 'van-mieu-quoc-tu-giam',
     name: 'Văn Miếu – Quốc Tử Giám',
     provinceId: 'ha-noi',
