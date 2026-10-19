@@ -114,6 +114,28 @@ export const LANDMARK_SEED = [
     coordinates: { lat: 11.9416, lng: 108.4419 },
   },
   {
+    slug: 'nha-tho-con-ga',
+    name: 'Nhà thờ Con Gà (Chánh Tòa Đà Lạt)',
+    provinceId: 'lam-dong',
+    category: 'religious',
+    summary:
+      'Nhà thờ chính tòa của Đà Lạt, xây từ năm 1931 đến 1942, quen gọi là nhà thờ Con Gà vì tượng gà trống trên đỉnh tháp chuông cao khoảng 47 m. Tường màu hồng cam, mặt bằng hình chữ thập dài khoảng 65 m, cửa vòm và 70 ô kính màu.',
+    coordinates: { lat: 11.9365, lng: 108.4378 },
+    mapsQuery: 'Nhà thờ Con Gà, Đà Lạt',
+    model: { path: '/models/nha-tho-con-ga.glb', sizeKb: 461 },
+  },
+  {
+    slug: 'quang-truong-lam-vien',
+    name: 'Quảng trường Lâm Viên (Nụ hoa Atiso)',
+    provinceId: 'lam-dong',
+    category: 'architecture',
+    summary:
+      'Quảng trường rộng hơn 7 ha bên hồ Xuân Hương. Nổi bật là nụ hoa atiso bằng kính xanh cao khoảng 15 m, bên trong là quán cà phê, và mái vòm kính vàng hình bông dã quỳ với ô kính tròn trên đỉnh, là nhà hát biểu diễn nghệ thuật.',
+    coordinates: { lat: 11.93875, lng: 108.444528 },
+    mapsQuery: 'Quảng trường Lâm Viên, Đà Lạt',
+    model: { path: '/models/quang-truong-lam-vien.glb', sizeKb: 462 },
+  },
+  {
     slug: 'trang-an',
     name: 'Tràng An',
     provinceId: 'ninh-binh',
