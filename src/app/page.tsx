@@ -11,7 +11,7 @@ export default async function HomePage() {
   return (
     <main>
       {/* MapExplorer reads `?tinh=` from the URL, so it renders inside a Suspense boundary. */}
-      <Suspense fallback={<div className="h-dvh bg-mat" />}>
+      <Suspense fallback={<div className="h-dvh bg-ocean-700" />}>
         <MapExplorer landmarks={landmarks} />
       </Suspense>
     </main>

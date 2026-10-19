@@ -3,6 +3,7 @@
 import { type CSSProperties, type KeyboardEvent, memo } from 'react';
 
 import { getProvinceShape, VIETNAM_MAP } from '@/entities/province/data/vietnam-map';
+import { regionFill } from '@/entities/province/lib/region-fill';
 import { findProvince, isProvinceId, type ProvinceId } from '@/entities/province/model/provinces';
 
 interface ProvinceLayerProps {
@@ -17,8 +18,7 @@ function provinceFromEvent(target: EventTarget | null): ProvinceId | null {
   return isProvinceId(id) ? id : null;
 }
 
-// Static per-province attributes, computed once. Neighbouring pieces get a
-// slightly different paper tone, like sheets cut from different stock.
+// Static per-province attributes, computed once.
 const PIECES = VIETNAM_MAP.provinces.map((shape) => {
   const province = findProvince(shape.id);
   return {
@@ -26,9 +26,11 @@ const PIECES = VIETNAM_MAP.provinces.map((shape) => {
     d: shape.d,
     name: province?.name ?? shape.id,
     region: province?.region,
-    style: { '--tone': (province?.order ?? 0) % 3 } as CSSProperties,
+    style: (province ? { '--fill': regionFill(province.region, province.order) } : {}) as CSSProperties,
   };
 });
+
+const PIECE_STYLE = new Map(PIECES.map((p) => [p.id, p.style]));
 
 const landShadow = <path className="map-land-shadow" d={VIETNAM_MAP.land} />;
 const borders = <path className="map-borders" d={VIETNAM_MAP.borders} />;
@@ -58,6 +60,7 @@ export const ProvinceLayer = memo(function ProvinceLayer({
   return (
     <g
       className="map-provinces"
+      data-has-selection={selectedId ? 'true' : undefined}
       onClick={(e) => {
         const id = provinceFromEvent(e.target);
         if (id) onSelect(id);
@@ -108,6 +111,7 @@ export const ProvinceLayer = memo(function ProvinceLayer({
           key={selectedShape.id}
           d={selectedShape.d}
           data-region={findProvince(selectedShape.id)?.region}
+          style={PIECE_STYLE.get(selectedShape.id)}
           className="map-province-lifted"
           aria-hidden="true"
         />

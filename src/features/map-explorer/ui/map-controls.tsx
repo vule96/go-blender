@@ -9,12 +9,12 @@ interface MapControlsProps {
 }
 
 const BUTTON =
-  'grid size-9 place-items-center bg-paper text-ink transition-colors hover:bg-white active:bg-paper-white';
+  'grid size-10 place-items-center bg-white/95 text-ink transition-colors hover:bg-white active:bg-sand-100';
 
-/** Zoom in, zoom out, show everything: three paper squares stacked into one strip. */
+/** Zoom in, zoom out, show the whole country: one stacked strip. */
 export function MapControls({ controls, onShowAll }: MapControlsProps) {
   return (
-    <div className="pointer-events-auto flex flex-col divide-y divide-rule overflow-hidden rounded-md shadow-[2px_3px_0_rgb(8_28_22/0.45)]">
+    <div className="pointer-events-auto flex flex-col divide-y divide-sand-200 overflow-hidden rounded-xl shadow-md">
       <button
         type="button"
         className={BUTTON}

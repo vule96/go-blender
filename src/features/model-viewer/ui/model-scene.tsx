@@ -13,8 +13,8 @@ import {
 import { Canvas } from '@react-three/fiber';
 import { Component, type ReactNode, Suspense, useState } from 'react';
 
-/** Same green as the map's cutting mat (`--color-mat`). */
-const MAT = '#2e5e4e';
+/** The map's deep-sea blue (`--color-ocean-700`), so models sit in the same world as the map. */
+const SEA = '#17607f';
 
 export interface ModelSceneProps {
   readonly url: string;
@@ -34,7 +34,7 @@ function LoadingOverlay() {
   if (!active) return null;
   return (
     <div className="pointer-events-none absolute inset-0 grid place-items-center">
-      <div className="rounded-sm bg-paper px-3 py-1.5 text-sm font-medium whitespace-nowrap text-ink tabular-nums shadow-[2px_3px_0_rgb(8_28_22/0.45)]">
+      <div className="rounded-full bg-white/95 px-4 py-1.5 font-display text-sm font-bold whitespace-nowrap text-ink tabular-nums shadow-md">
         Đang tải mô hình {Math.round(progress)}%
       </div>
     </div>
@@ -69,9 +69,9 @@ class ErrorBoundary extends Component<BoundaryProps, BoundaryState> {
 
 function ErrorMessage({ title, children }: { readonly title: string; readonly children: ReactNode }) {
   return (
-    <div className="mat-surface grid h-full w-full place-items-center p-6">
-      <div className="max-w-sm rounded-sm bg-paper p-4 text-[15px] text-ink shadow-[3px_4px_0_rgb(8_28_22/0.45)]">
-        <p className="font-semibold">{title}</p>
+    <div className="ocean-surface grid h-full w-full place-items-center p-6">
+      <div className="max-w-sm rounded-2xl border-4 border-sand-300 bg-sand-50 p-4 text-[15px] text-ink shadow-xl">
+        <p className="font-display text-lg font-bold">{title}</p>
         <p className="mt-1 text-ink-muted">{children}</p>
       </div>
     </div>
@@ -112,18 +112,18 @@ export default function ModelScene({ url, autoRotate = true }: ModelSceneProps) 
           camera={{ position: [6, 4.5, 6], fov: 35, near: 0.1, far: 200 }}
           gl={{ antialias: true, preserveDrawingBuffer: false }}
         >
-          <color attach="background" args={[MAT]} />
-          <hemisphereLight args={['#fff6e6', MAT, 0.6]} />
-          {/* The model stands on the same cutting mat as the map. */}
+          <color attach="background" args={[SEA]} />
+          <hemisphereLight args={['#fff6e6', SEA, 0.6]} />
+          {/* A faint grid on the sea floor, echoing the map's latitude/longitude lines. */}
           <Grid
             position={[0, -0.002, 0]}
             infiniteGrid
             cellSize={0.25}
             cellThickness={0.6}
-            cellColor="#4a7967"
+            cellColor="#2a7a96"
             sectionSize={1}
             sectionThickness={1}
-            sectionColor="#7ea795"
+            sectionColor="#5fb0c8"
             fadeDistance={40}
             fadeStrength={1.2}
           />
@@ -135,7 +135,7 @@ export default function ModelScene({ url, autoRotate = true }: ModelSceneProps) 
             }}
           >
             <Suspense fallback={null}>
-              <Bounds fit clip observe margin={1.5}>
+              <Bounds fit clip observe margin={1.15}>
                 <Model url={url} />
               </Bounds>
             </Suspense>

@@ -54,16 +54,16 @@ async function ProvinceContent({ params }: { readonly params: Params }) {
 
   return (
     <>
-      <div className="mat-surface relative h-[42dvh] overflow-hidden md:sticky md:top-0 md:h-dvh">
+      <div className="ocean-surface relative h-[42dvh] overflow-hidden md:sticky md:top-0 md:h-dvh">
         <ProvinceMinimap provinceId={province.id} className="absolute inset-0 size-full p-6 md:p-12" />
       </div>
 
-      <article className="bg-paper px-5 py-6 md:px-10 md:py-10">
+      <article className="bg-sand-50 px-5 py-6 md:px-10 md:py-10">
         <BackLink href={`/?tinh=${province.id}`} className="text-ink-muted hover:text-ink">
           Bản đồ
         </BackLink>
 
-        <h1 className="mt-4 text-[clamp(2.25rem,6vw,3.5rem)] leading-[1.02] font-extrabold tracking-[-0.015em] text-balance type-wide">
+        <h1 className="mt-3 font-display text-[clamp(2.75rem,6vw,4rem)] leading-[1.02] font-extrabold text-balance text-leaf-900">
           {province.name}
         </h1>
         <p className="mt-3 flex items-center gap-2 text-[17px] text-ink-muted">
@@ -76,9 +76,11 @@ async function ProvinceContent({ params }: { readonly params: Params }) {
           </p>
         ) : null}
 
-        <h2 className="mt-10 flex items-baseline border-b border-ink pb-2 text-base font-semibold">
+        <h2 className="mt-10 flex items-baseline border-b-2 border-sand-300 pb-2 font-display text-xl font-bold">
           Địa danh
-          <span className="ml-auto font-normal text-ink-muted tabular-nums">{landmarks.length}</span>
+          <span className="ml-auto font-sans text-sm font-normal text-ink-muted tabular-nums">
+            {landmarks.length}
+          </span>
         </h2>
 
         {landmarks.length === 0 ? (
@@ -89,10 +91,10 @@ async function ProvinceContent({ params }: { readonly params: Params }) {
         ) : (
           <ul>
             {landmarks.map((l) => (
-              <li key={l.slug} className="border-b border-rule">
+              <li key={l.slug} className="border-b border-sand-200 last:border-b-0">
                 <LandmarkLink slug={l.slug} hasModel={hasModel(l)} className="group flex gap-4 py-4">
                   <span className="min-w-0 flex-1">
-                    <span className="block text-lg font-semibold transition-colors group-hover:text-select">
+                    <span className="block font-display text-xl font-bold transition-colors group-hover:text-leaf-700">
                       {l.name}
                     </span>
                     <span className="block text-sm text-ink-muted">
@@ -116,11 +118,11 @@ async function ProvinceContent({ params }: { readonly params: Params }) {
 function ProvinceSkeleton() {
   return (
     <>
-      <div className="mat-surface h-[42dvh] md:h-dvh" />
-      <div className="bg-paper px-5 py-6 md:px-10 md:py-10" aria-busy="true">
-        <div className="h-4 w-16 rounded-sm bg-rule" />
-        <div className="mt-6 h-12 w-3/4 rounded-sm bg-rule" />
-        <div className="mt-4 h-4 w-1/2 rounded-sm bg-rule" />
+      <div className="ocean-surface h-[42dvh] md:h-dvh" />
+      <div className="bg-sand-50 px-5 py-6 md:px-10 md:py-10" aria-busy="true">
+        <div className="h-4 w-16 rounded-md bg-sand-200" />
+        <div className="mt-6 h-12 w-3/4 rounded-md bg-sand-200" />
+        <div className="mt-4 h-4 w-1/2 rounded-md bg-sand-200" />
       </div>
     </>
   );

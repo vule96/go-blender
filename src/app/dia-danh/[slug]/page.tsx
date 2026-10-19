@@ -50,9 +50,9 @@ async function LandmarkContent({ params }: { readonly params: Params }) {
         {modelPath ? (
           <ModelViewer url={assetUrl(modelPath)} />
         ) : (
-          <div className="mat-surface grid h-full place-items-center p-6">
-            <div className="max-w-xs rounded-sm bg-paper p-4 text-[15px] shadow-[3px_4px_0_rgb(8_28_22/0.45)]">
-              <p className="font-semibold">Chưa có mô hình 3D</p>
+          <div className="ocean-surface grid h-full place-items-center p-6">
+            <div className="max-w-xs rounded-2xl border-4 border-sand-300 bg-sand-50 p-4 text-[15px] shadow-xl">
+              <p className="font-display text-lg font-bold">Chưa có mô hình 3D</p>
               <p className="mt-1 text-ink-muted">
                 {hasModel(landmark) ? (
                   <>
@@ -68,12 +68,12 @@ async function LandmarkContent({ params }: { readonly params: Params }) {
         )}
       </div>
 
-      <article className="bg-paper px-5 py-6 md:px-8 md:py-10">
+      <article className="bg-sand-50 px-5 py-6 md:px-8 md:py-10">
         <BackLink href={`/tinh/${province.id}`} className="text-ink-muted hover:text-ink">
           {province.name}
         </BackLink>
 
-        <h1 className="mt-4 text-[clamp(1.75rem,3vw,2.25rem)] leading-[1.08] font-extrabold tracking-[-0.015em] text-balance type-wide">
+        <h1 className="mt-3 font-display text-[clamp(2.25rem,3.6vw,3rem)] leading-[1.05] font-extrabold text-balance text-leaf-900">
           {landmark.name}
         </h1>
         <p className="mt-3 text-[17px] text-ink-muted">
@@ -86,7 +86,7 @@ async function LandmarkContent({ params }: { readonly params: Params }) {
           href={mapsUrl}
           target="_blank"
           rel="noreferrer"
-          className="mt-8 inline-block rounded-md border border-ink px-4 py-2.5 text-[15px] font-semibold transition-colors hover:bg-ink hover:text-paper"
+          className="mt-8 inline-block rounded-2xl border-2 border-leaf-700 px-5 py-2.5 font-display text-lg font-bold text-leaf-700 transition-colors hover:bg-leaf-700 hover:text-white"
         >
           Mở trong Google Maps
         </a>
@@ -102,11 +102,11 @@ async function LandmarkContent({ params }: { readonly params: Params }) {
 function LandmarkSkeleton() {
   return (
     <>
-      <div className="mat-surface h-[58dvh] md:h-dvh" />
-      <div className="bg-paper px-5 py-6 md:px-8 md:py-10" aria-busy="true">
-        <div className="h-4 w-20 rounded-sm bg-rule" />
-        <div className="mt-6 h-10 w-4/5 rounded-sm bg-rule" />
-        <div className="mt-4 h-4 w-1/2 rounded-sm bg-rule" />
+      <div className="ocean-surface h-[58dvh] md:h-dvh" />
+      <div className="bg-sand-50 px-5 py-6 md:px-8 md:py-10" aria-busy="true">
+        <div className="h-4 w-20 rounded-md bg-sand-200" />
+        <div className="mt-6 h-10 w-4/5 rounded-md bg-sand-200" />
+        <div className="mt-4 h-4 w-1/2 rounded-md bg-sand-200" />
       </div>
     </>
   );

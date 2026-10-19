@@ -18,6 +18,22 @@ const [, , MAP_W, MAP_H] = VIETNAM_MAP.viewBox;
 const CONTENT: Rect = { x: 0, y: 0, width: MAP_W, height: MAP_H };
 const VIEW_BOX = VIETNAM_MAP.viewBox.join(' ');
 
+/** Shallow-water glow around the two archipelagos. */
+const reefs = VIETNAM_MAP.archipelagos.map((a) => {
+  const [x0, y0, x1, y1] = a.bounds;
+  return (
+    <ellipse
+      key={a.id}
+      cx={(x0 + x1) / 2}
+      cy={(y0 + y1) / 2}
+      rx={(x1 - x0) / 2 + 30}
+      ry={(y1 - y0) / 2 + 30}
+      fill="url(#reef-glow)"
+      aria-hidden="true"
+    />
+  );
+});
+
 /** The whole country, archipelagos included: what "show everything" frames. */
 const HOME_BOUNDS: Bounds = [...VIETNAM_MAP.provinces, ...VIETNAM_MAP.archipelagos].reduce<Bounds>(
   ([ax0, ay0, ax1, ay1], { bounds: [x0, y0, x1, y1] }) => [
@@ -72,8 +88,15 @@ export function VietnamMap({ occluderRef }: VietnamMapProps) {
         role="group"
         aria-label="Bản đồ hành chính Việt Nam, 34 tỉnh và thành phố"
       >
+        <defs>
+          <radialGradient id="reef-glow">
+            <stop offset="0" stopColor="#9be7f2" stopOpacity="0.35" />
+            <stop offset="1" stopColor="#9be7f2" stopOpacity="0" />
+          </radialGradient>
+        </defs>
         <g ref={layerRef}>
           <MapGraticule />
+          {reefs}
           <ProvinceLayer selectedId={selectedId} onSelect={select} onHover={hover} />
           <MapLabels />
         </g>
@@ -90,7 +113,7 @@ export function VietnamMap({ occluderRef }: VietnamMapProps) {
 
       <HoverTag />
 
-      <p className="pointer-events-none absolute bottom-2 left-3 z-10 max-w-[60%] text-[10px] leading-tight text-mat-ink/80">
+      <p className="pointer-events-none absolute bottom-2 left-3 z-10 max-w-[60%] text-[10px] leading-tight text-white/70">
         {VIETNAM_MAP.attribution}
       </p>
     </div>
@@ -106,7 +129,7 @@ function HoverTag() {
   return (
     <div
       aria-hidden="true"
-      className="pointer-events-none absolute top-3 left-1/2 z-10 -translate-x-1/2 rounded-sm bg-paper px-2.5 py-1 text-sm font-semibold text-ink shadow-[2px_3px_0_rgb(8_28_22/0.45)] transition-opacity data-[visible=false]:opacity-0"
+      className="pointer-events-none absolute top-3 left-1/2 z-10 -translate-x-1/2 rounded-full bg-white/95 px-3.5 py-1 font-display text-sm font-bold text-ink shadow-md transition-opacity data-[visible=false]:opacity-0"
       data-visible={hovered ? 'true' : 'false'}
     >
       {hovered?.name ?? ''}

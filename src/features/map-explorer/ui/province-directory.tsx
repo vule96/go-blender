@@ -3,7 +3,6 @@
 import { useDeferredValue, useState } from 'react';
 
 import { type ProvinceId, PROVINCES, REGION_LABEL, REGIONS } from '@/entities/province/model/provinces';
-import { RegionSwatch } from '@/entities/province/ui/region-swatch';
 import { normalizeVietnamese } from '@/shared/lib/text';
 
 interface ProvinceDirectoryProps {
@@ -33,7 +32,7 @@ export function ProvinceDirectory({ landmarkCounts, onSelect }: ProvinceDirector
             setQuery(e.target.value);
           }}
           placeholder="Tìm tỉnh, kể cả tên cũ như Bình Dương"
-          className="w-full rounded-md border border-rule bg-white px-3 py-2 text-[15px] text-ink outline-none placeholder:text-ink-muted/70 focus:border-ink"
+          className="w-full rounded-2xl border-2 border-sand-300 bg-white px-4 py-2.5 text-[15px] text-ink outline-none placeholder:text-ink-muted/70 focus:border-leaf-500"
         />
       </label>
 
@@ -48,31 +47,31 @@ export function ProvinceDirectory({ landmarkCounts, onSelect }: ProvinceDirector
           if (items.length === 0) return null;
           return (
             <section key={region} aria-labelledby={`region-${region}`} className="mb-5 last:mb-0">
-              <h2
-                id={`region-${region}`}
-                className="flex items-center gap-2 border-b border-ink pb-1.5 text-sm font-semibold"
-              >
-                <RegionSwatch region={region} />
-                {REGION_LABEL[region]}
-                <span className="ml-auto font-normal text-ink-muted tabular-nums">{items.length}</span>
+              <h2 id={`region-${region}`} className="mb-1 flex items-center gap-2 text-sm">
+                <span
+                  data-region={region}
+                  className="rounded-full bg-(--region) px-2.5 py-0.5 font-display font-bold text-ink"
+                >
+                  {REGION_LABEL[region]}
+                </span>
+                <span className="text-ink-muted tabular-nums">{items.length} tỉnh, thành</span>
               </h2>
               <ul>
                 {items.map(({ province }) => {
                   const count = landmarkCounts.get(province.id) ?? 0;
                   return (
-                    <li key={province.id} className="border-b border-rule">
+                    <li key={province.id} className="border-b border-sand-200 last:border-b-0">
                       <button
                         type="button"
                         onClick={() => {
                           onSelect(province.id);
                         }}
-                        className="flex w-full items-baseline gap-3 py-2 text-left text-[15px] transition-colors hover:text-select focus-visible:outline-offset-0"
+                        className="-mx-2 flex w-[calc(100%+1rem)] items-baseline gap-3 rounded-lg px-2 py-2 text-left text-[15px] font-medium transition-colors hover:bg-sand-100 focus-visible:outline-offset-0"
                       >
                         <span className="min-w-0 flex-1">{province.name}</span>
                         {count > 0 ? (
-                          <span className="flex items-center gap-1 text-sm text-ink-muted tabular-nums">
-                            {count}
-                            <span className="sr-only">địa danh</span>
+                          <span className="text-sm font-semibold text-leaf-700 tabular-nums">
+                            {count} địa danh
                           </span>
                         ) : null}
                       </button>

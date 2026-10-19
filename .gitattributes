@@ -5,3 +5,5 @@
 *.jpg binary
 *.webp binary
 *.ktx2 binary
+*.blend binary
+*.blend1 binary

@@ -41,9 +41,11 @@ Các lệnh bên dưới viết theo npm. Dùng yarn thì bỏ chữ `run` (`yar
 
 ## Giao diện
 
-Ý tưởng là bàn làm mô hình. Bản đồ là các mảnh giấy cắt đặt trên tấm lót cắt màu xanh. Lưới trên tấm lót là lưới kinh, vĩ độ thật, cách nhau 0,5°. Khe hở giữa các mảnh giấy chính là đường biên tỉnh. Mỗi miền dùng một loại giấy (kraft, trắng, xanh xám). Tỉnh đang chọn được viền cam và nhấc lên khỏi mặt bàn, giống cách Blender viền object đang chọn. Trang địa danh đặt mô hình 3D lên cùng tấm lót đó.
+Bảng màu kiểu bản đồ game. Biển xanh sâu bao quanh đất liền. Các tỉnh tô theo ba họ màu theo miền: xanh lá ở miền Bắc, vàng ở miền Trung, cam ở miền Nam. Hai tỉnh cạnh nhau có sắc độ khác nhau để dễ phân biệt (`entities/province/lib/region-fill.ts`). Panel bên cạnh màu cát.
 
-Chỉ dùng một họ chữ là Archivo, đổi độ rộng theo vai trò: bản hẹp (`type-narrow`) cho nhãn trên bản đồ, bản thường để đọc, bản rộng (`type-wide`) cho tên tỉnh và địa danh. Màu và font được khai báo trong `@theme` ở `src/app/globals.css`.
+Lưới trên mặt biển là lưới kinh, vĩ độ thật. Tỉnh đang chọn được vẽ lại ở lớp trên cùng, có viền trắng và đổ bóng như được nhấc lên. Mô hình 3D đặt trên nền biển cùng tông màu, có lưới mờ.
+
+Chữ dùng Baloo 2 cho tên và tiêu đề, Be Vietnam Pro cho nội dung. Màu và font được khai báo trong `@theme` ở `src/app/globals.css`.
 
 ## Cấu trúc
 
@@ -69,6 +71,8 @@ public/models/                File .glb
 Chi tiết xem [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md). Hướng phát triển thành game xem [docs/ROADMAP.md](docs/ROADMAP.md).
 
 ## Thêm địa danh và mô hình 3D
+
+File Blender gốc của các mô hình đã có nằm ở `blender/nha-trang-landmarks.blend` (mỗi mô hình là một collection).
 
 1. **Xuất từ Blender:** File → Export → glTF 2.0, chọn Format **glTF Binary (.glb)**, tích _Apply Modifiers_. Chỉ chọn mesh, bỏ camera và đèn.
 2. **Nén:**

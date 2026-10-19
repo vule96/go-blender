@@ -42,3 +42,8 @@ next-env.d.ts
 
 # map build cache
 /.cache
+
+# Blender autosave backups
+*.blend1
+# raw exports before `model:optimize`
+*.raw.glb

@@ -83,8 +83,8 @@ export function MapExplorer({ landmarks }: MapExplorerProps) {
         ref={panelRef}
         aria-label={selected ? `Thông tin ${selected.name}` : 'Danh sách tỉnh, thành phố'}
         className={cn(
-          'absolute inset-x-0 bottom-0 z-20 flex flex-col rounded-t-xl bg-paper pt-5 shadow-[0_-6px_24px_rgb(8_28_22/0.35)]',
-          'md:static md:max-h-none md:w-[380px] md:shrink-0 md:rounded-none md:shadow-[-6px_0_24px_rgb(8_28_22/0.35)]',
+          'absolute inset-x-0 bottom-0 z-20 flex flex-col rounded-t-3xl border-4 border-b-0 border-sand-300 bg-sand-50 pt-5 shadow-2xl',
+          'md:static md:m-3 md:max-h-none md:w-[380px] md:shrink-0 md:rounded-3xl md:border-b-4',
           // The sheet stays short while browsing so the map stays visible on phones.
           selected ? 'max-h-[56dvh]' : 'max-h-[42dvh]',
         )}
@@ -100,8 +100,8 @@ export function MapExplorer({ landmarks }: MapExplorerProps) {
         ) : (
           <>
             <header className="mb-4 px-5">
-              <h1 className="text-2xl font-extrabold tracking-[-0.01em] type-wide">{SITE.name}</h1>
-              <p className="mt-1 max-w-[34ch] text-[15px] text-ink-muted">
+              <h1 className="font-display text-3xl leading-none font-extrabold text-leaf-900">{SITE.name}</h1>
+              <p className="mt-2 max-w-[34ch] text-[15px] text-ink-muted">
                 Chọn một tỉnh trên bản đồ để xem các địa danh và mô hình 3D của tỉnh đó.
               </p>
             </header>

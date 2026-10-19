@@ -16,9 +16,9 @@ describe('landmark repository', () => {
   });
 
   it('finds by slug and groups by province', async () => {
-    const cathedral = await repo.findBySlug('nha-tho-nui-nha-trang');
-    expect(cathedral?.provinceId).toBe('khanh-hoa');
-    expect(cathedral?.model?.path).toMatch(/\.glb$/);
+    const pagoda = await repo.findBySlug('chua-long-son');
+    expect(pagoda?.provinceId).toBe('khanh-hoa');
+    expect(pagoda?.model?.path).toBe('/models/chua-long-son.glb');
 
     const counts = await repo.countByProvince();
     const inKhanhHoa = await repo.listByProvince('khanh-hoa');
@@ -39,5 +39,16 @@ describe('landmark repository', () => {
         },
       ]),
     ).toThrow();
+  });
+});
+
+describe('landmark model files', () => {
+  it('ships a GLB in public/ for every landmark that declares a local model', async () => {
+    const { existsSync } = await import('node:fs');
+    const path = await import('node:path');
+    const repo = createStaticLandmarkRepository(LANDMARK_SEED);
+    for (const l of await repo.list()) {
+      if (l.model) expect(existsSync(path.join(process.cwd(), 'public', l.model.path)), l.slug).toBe(true);
+    }
   });
 });

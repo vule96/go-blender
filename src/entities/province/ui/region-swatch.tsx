@@ -1,12 +1,12 @@
 import type { Region } from '../model/provinces';
 
-/** A small square of the region's paper, tying list headings to the colours on the map. */
+/** A dot in the region's map colour, tying text back to the map. */
 export function RegionSwatch({ region }: { readonly region: Region }) {
   return (
     <span
       aria-hidden="true"
       data-region={region}
-      className="inline-block size-2.5 shrink-0 rounded-[2px] bg-(--paper) ring-1 ring-black/20"
+      className="inline-block size-3 shrink-0 rounded-full bg-(--region) ring-2 ring-white"
     />
   );
 }

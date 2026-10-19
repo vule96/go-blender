@@ -1,4 +1,8 @@
-import '@fontsource-variable/archivo/wdth.css';
+import '@fontsource/be-vietnam-pro/400.css';
+import '@fontsource/be-vietnam-pro/500.css';
+import '@fontsource/be-vietnam-pro/600.css';
+import '@fontsource/baloo-2/700.css';
+import '@fontsource/baloo-2/800.css';
 import './globals.css';
 
 import type { Metadata, Viewport } from 'next';
@@ -14,7 +18,7 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: '#2e5e4e',
+  themeColor: '#17607f',
   width: 'device-width',
   initialScale: 1,
 };
