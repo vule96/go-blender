@@ -421,6 +421,17 @@ export const LANDMARK_SEED = [
     model: { path: '/models/cho-noi-cai-rang.glb', sizeKb: 493 },
   },
   {
+    slug: 'toa-thanh-tay-ninh',
+    name: 'Tòa Thánh Tây Ninh',
+    provinceId: 'tay-ninh',
+    category: 'religious',
+    summary:
+      'Thánh thất trung ương của đạo Cao Đài, khởi công năm 1933 và khánh thành năm 1955. Mặt tiền Hiệp Thiên Đài có hai tháp chuông, tháp trống và biểu tượng Thiên Nhãn; nối phía sau là Cửu Trùng Đài chia chín cấp, cuối cùng là Bát Quái Đài hình bát giác. Phía trước là sân Đại Đồng Xã rộng, chung quanh là khuôn viên rợp cây cổ thụ; tín đồ mặc áo dài trắng dự lễ.',
+    coordinates: { lat: 11.2919, lng: 106.1306 },
+    mapsQuery: 'Tòa Thánh Tây Ninh',
+    model: { path: '/models/toa-thanh-tay-ninh.glb', sizeKb: 272 },
+  },
+  {
     slug: 'dao-phu-quoc',
     name: 'Đảo Phú Quốc',
     provinceId: 'an-giang',
