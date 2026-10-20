@@ -148,6 +148,17 @@ export const LANDMARK_SEED = [
     model: { path: '/models/cau-rong.glb', sizeKb: 302 },
   },
   {
+    slug: 'cau-vang',
+    name: 'Cầu Vàng (Bà Nà Hills)',
+    provinceId: 'da-nang',
+    category: 'architecture',
+    summary:
+      'Cây cầu đi bộ dài 150 m, rộng 5 m trong khu du lịch Bà Nà Hills, mở cửa tháng 6/2018. Thân cầu và lan can màu vàng uốn cong gần thành một vòng giữa rừng núi, được nâng đỡ bởi hai bàn tay khổng lồ làm từ sợi thủy tinh và lưới thép, tạo hình như đá rêu phong nhô lên từ sườn núi.',
+    coordinates: { lat: 15.9949, lng: 107.9963 },
+    mapsQuery: 'Cầu Vàng, Bà Nà Hills',
+    model: { path: '/models/cau-vang.glb', sizeKb: 289 },
+  },
+  {
     slug: 'pho-co-hoi-an',
     name: 'Phố cổ Hội An',
     provinceId: 'da-nang',
