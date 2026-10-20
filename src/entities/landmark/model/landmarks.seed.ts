@@ -379,6 +379,17 @@ export const LANDMARK_SEED = [
     model: { path: '/models/thac-ban-gioc.glb', sizeKb: 280 },
   },
   {
+    slug: 'tuong-dai-dien-bien-phu',
+    name: 'Tượng đài Chiến thắng Điện Biên Phủ',
+    provinceId: 'dien-bien',
+    category: 'historical',
+    summary:
+      'Tượng đài trên đỉnh đồi D1, dựng nhân kỷ niệm 50 năm Chiến thắng Điện Biên Phủ (1954–2004). Tượng cao 12,6 m trên bệ 3,6 m, đúc bằng đồng, tạc ba chiến sĩ chụm lưng vào nhau: một người cầm súng, một người cầm lá cờ “Quyết chiến quyết thắng”, một người nâng em bé gái dân tộc Thái. Trục hành lễ 320 bậc chia ba chiếu nghỉ, dưới chân là phù điêu đá lớn kể lại chiến dịch.',
+    coordinates: { lat: 21.3874, lng: 103.0166 },
+    mapsQuery: 'Tượng đài Chiến thắng Điện Biên Phủ',
+    model: { path: '/models/tuong-dai-dien-bien-phu.glb', sizeKb: 265 },
+  },
+  {
     slug: 'dinh-fansipan',
     name: 'Đỉnh Fansipan',
     provinceId: 'lao-cai',
@@ -461,7 +472,7 @@ export const LANDMARK_SEED = [
     provinceId: 'quang-ngai',
     category: 'nature',
     summary:
-      'Hòn đảo hình thành từ núi lửa ngoài khơi Quảng Ngãi. Cổng Tò Vò là vòm đá đen do dung nham tạo nên, Hang Câu là vách đá nằm dưới chân núi Thới Lới, đỉnh cao nhất đảo có cột cờ Tổ quốc cao 20 m; phía tây là miệng núi lửa cổ Giếng Tiền. Trên những thửa ruộng phủ cát trắng, người dân trồng tỏi, nguồn thu nhập chính của đảo.',
+      'Hòn đảo hình thành từ núi lửa ngoài khơi Quảng Ngãi. Cổng Tò Vò là vòm đá đen do dung nham tạo nên, Hang Câu là vách đá nằm dưới chân núi Thới Lới, đỉnh cao nhất đảo có cột cờ Tổ quốc cao 20 m; đảo còn giữ miệng núi lửa cổ Giếng Tiền. Trên những thửa ruộng phủ cát trắng, người dân trồng tỏi, nguồn thu nhập chính của đảo.',
     coordinates: { lat: 15.3794, lng: 109.1167 },
     mapsQuery: 'Đảo Lý Sơn, Quảng Ngãi',
     model: { path: '/models/dao-ly-son.glb', sizeKb: 284 },
