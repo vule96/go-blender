@@ -242,6 +242,17 @@ export const LANDMARK_SEED = [
     model: { path: '/models/bitexco.glb', sizeKb: 347 },
   },
   {
+    slug: 'buu-dien-sai-gon',
+    name: 'Bưu điện Trung tâm Sài Gòn',
+    provinceId: 'tp-ho-chi-minh',
+    category: 'architecture',
+    summary:
+      'Tòa nhà bưu điện xây từ năm 1886 đến 1891 theo thiết kế của kiến trúc sư Alfred Foulhoux, đối diện Nhà thờ Đức Bà. Mặt tiền màu vàng với cửa vòm lớn ở giữa, phía trên là đồng hồ tròn; hai bên là dãy cửa vòm và cửa sổ có chớp, trên tường gắn tên các nhà khoa học như Morse, Ampère, Volta.',
+    coordinates: { lat: 10.78, lng: 106.7 },
+    mapsQuery: 'Bưu điện Trung tâm Sài Gòn',
+    model: { path: '/models/buu-dien-sai-gon.glb', sizeKb: 167 },
+  },
+  {
     slug: 'ho-xuan-huong',
     name: 'Hồ Xuân Hương',
     provinceId: 'lam-dong',
