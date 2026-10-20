@@ -417,7 +417,7 @@ export const LANDMARK_SEED = [
     provinceId: 'thanh-hoa',
     category: 'historical',
     summary:
-      'Tòa thành đá do Hồ Quý Ly cho xây năm 1397 ở Vĩnh Lộc, mặt bằng gần vuông khoảng 870 × 883 m với bốn cổng. Cổng Nam cao khoảng 9,5 m, rộng hơn 15 m, gồm ba vòm cuốn ghép từ những khối đá lớn, trung bình khoảng 2 × 1 × 0,7 m, không dùng vữa. Ngày nay tường thành phần lớn đã đổ, xung quanh là ruộng lúa và làng quê. Di sản Văn hóa Thế giới từ năm 2011.',
+      'Tòa thành đá do Hồ Quý Ly cho xây năm 1397 ở Vĩnh Lộc, mặt bằng gần vuông khoảng 870 × 883 m với bốn cổng. Cổng Nam cao khoảng 9,5 m, rộng hơn 15 m, gồm ba vòm cuốn ghép từ những khối đá lớn, trung bình khoảng 2 × 1 × 0,7 m. Ngày nay tường thành phần lớn đã đổ, xung quanh là ruộng lúa và làng quê. Di sản Văn hóa Thế giới từ năm 2011.',
     coordinates: { lat: 20.0781, lng: 105.6047 },
     mapsQuery: 'Thành nhà Hồ, Vĩnh Lộc, Thanh Hóa',
     model: { path: '/models/thanh-nha-ho.glb', sizeKb: 171 },
@@ -454,6 +454,17 @@ export const LANDMARK_SEED = [
     coordinates: { lat: 11.2919, lng: 106.1306 },
     mapsQuery: 'Tòa Thánh Tây Ninh',
     model: { path: '/models/toa-thanh-tay-ninh.glb', sizeKb: 272 },
+  },
+  {
+    slug: 'dao-ly-son',
+    name: 'Đảo Lý Sơn',
+    provinceId: 'quang-ngai',
+    category: 'nature',
+    summary:
+      'Hòn đảo hình thành từ núi lửa ngoài khơi Quảng Ngãi. Cổng Tò Vò là vòm đá đen do dung nham tạo nên, Hang Câu là vách đá nằm dưới chân núi Thới Lới, đỉnh cao nhất đảo có cột cờ Tổ quốc cao 20 m; phía tây là miệng núi lửa cổ Giếng Tiền. Trên những thửa ruộng phủ cát trắng, người dân trồng tỏi, nguồn thu nhập chính của đảo.',
+    coordinates: { lat: 15.3794, lng: 109.1167 },
+    mapsQuery: 'Đảo Lý Sơn, Quảng Ngãi',
+    model: { path: '/models/dao-ly-son.glb', sizeKb: 284 },
   },
   {
     slug: 'dao-phu-quoc',
