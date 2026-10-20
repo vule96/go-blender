@@ -63,6 +63,17 @@ export const LANDMARK_SEED = [
     model: { path: '/models/nha-hat-do.glb', sizeKb: 402 },
   },
   {
+    slug: 'cho-dam',
+    name: 'Chợ Đầm (Chợ Đầm tròn)',
+    provinceId: 'khanh-hoa',
+    category: 'culture',
+    summary:
+      'Khu chợ hình tròn đường kính 66,5 m giữa trung tâm Nha Trang, do kiến trúc sư Lê Quý Phong thiết kế, khởi công năm 1969. Các mái chữ V xếp quanh tâm như những cánh sen, nhìn từ trên cao giống một đóa sen; hai dãy chung cư cong ôm phía sau. Chợ tròn đã đóng cửa từ tháng 4/2021, việc buôn bán chuyển sang chợ Đầm mới bên cạnh.',
+    coordinates: { lat: 12.2548, lng: 109.1906 },
+    mapsQuery: 'Chợ Đầm, Nha Trang',
+    model: { path: '/models/cho-dam.glb', sizeKb: 346 },
+  },
+  {
     slug: 'ho-hoan-kiem',
     name: 'Hồ Hoàn Kiếm',
     provinceId: 'ha-noi',
