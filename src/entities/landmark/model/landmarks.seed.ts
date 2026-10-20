@@ -361,9 +361,11 @@ export const LANDMARK_SEED = [
     name: 'Tràng An',
     provinceId: 'ninh-binh',
     category: 'nature',
-    summary: 'Quần thể danh thắng núi đá vôi, hang động và sông nước, Di sản hỗn hợp Thế giới.',
+    summary:
+      'Quần thể danh thắng rộng hơn 12.000 ha với những khối núi đá vôi dựng đứng phủ cây xanh, sông suối len giữa thung lũng và các hang xuyên thủy. Du khách ngồi thuyền do người lái chèo qua các hang, ghé những ngôi đền ven nước. Năm 2014 trở thành Di sản hỗn hợp Văn hóa và Thiên nhiên Thế giới đầu tiên của Việt Nam.',
     coordinates: { lat: 20.2541, lng: 105.8972 },
     mapsQuery: 'Khu du lịch sinh thái Tràng An, Ninh Bình',
+    model: { path: '/models/trang-an.glb', sizeKb: 315 },
   },
   {
     slug: 'dinh-fansipan',
