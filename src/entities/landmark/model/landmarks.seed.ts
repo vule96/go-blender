@@ -479,11 +479,14 @@ export const LANDMARK_SEED = [
   },
   {
     slug: 'dao-phu-quoc',
-    name: 'Đảo Phú Quốc',
+    name: 'Dinh Cậu – Đảo Phú Quốc',
     provinceId: 'an-giang',
-    category: 'nature',
-    summary: 'Hòn đảo lớn nhất Việt Nam với bãi biển, rừng nguyên sinh và làng chài.',
-    coordinates: { lat: 10.2899, lng: 103.984 },
+    category: 'culture',
+    summary:
+      'Phú Quốc là hòn đảo lớn nhất Việt Nam. Ở thị trấn Dương Đông, Dinh Cậu là ngôi miếu mái ngói đỏ nằm trên ghềnh đá nhô ra biển, thờ Cậu Quý, Cậu Tài và Chúa Ngọc Nương Nương, được ngư dân tin là phù hộ cho những chuyến ra khơi bình an. Cạnh dinh có ngọn hải đăng nhỏ; xung quanh là bãi biển, tàu cá neo đậu và phố biển, nơi đây nổi tiếng là điểm ngắm hoàng hôn.',
+    coordinates: { lat: 10.2167, lng: 103.9556 },
+    mapsQuery: 'Dinh Cậu, Dương Đông, Phú Quốc',
+    model: { path: '/models/dao-phu-quoc.glb', sizeKb: 203 },
   },
   {
     slug: 'mui-ca-mau',
