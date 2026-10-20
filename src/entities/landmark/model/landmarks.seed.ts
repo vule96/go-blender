@@ -264,6 +264,17 @@ export const LANDMARK_SEED = [
     model: { path: '/models/suoi-tien.glb', sizeKb: 203 },
   },
   {
+    slug: 'landmark-81',
+    name: 'Landmark 81',
+    provinceId: 'tp-ho-chi-minh',
+    category: 'architecture',
+    summary:
+      'Tòa tháp 81 tầng cao 461,2 m (tính cả chóp) trong khu Vinhomes Central Park bên sông Sài Gòn, cất nóc năm 2018 và là tòa nhà cao nhất Việt Nam. Thiết kế của Atkins lấy cảm hứng từ bó đũa tre, gồm nhiều khối hộp dừng ở những độ cao khác nhau; đài quan sát SkyView nằm ở tầng 79–81. Trong mô hình, chiều cao được thu ngắn để vừa khối đế.',
+    coordinates: { lat: 10.7951, lng: 106.7218 },
+    mapsQuery: 'Landmark 81',
+    model: { path: '/models/landmark-81.glb', sizeKb: 184 },
+  },
+  {
     slug: 'ho-xuan-huong',
     name: 'Hồ Xuân Hương',
     provinceId: 'lam-dong',
