@@ -67,8 +67,11 @@ export const LANDMARK_SEED = [
     name: 'Hồ Hoàn Kiếm',
     provinceId: 'ha-noi',
     category: 'culture',
-    summary: 'Hồ nước giữa trung tâm Hà Nội với Tháp Rùa, đền Ngọc Sơn và cầu Thê Húc.',
+    summary:
+      'Hồ nước giữa trung tâm Hà Nội. Giữa hồ là Tháp Rùa ba tầng, khởi công năm 1886 trên gò Rùa; phía bắc là đền Ngọc Sơn trên đảo Ngọc, nối với bờ bằng cầu Thê Húc sơn đỏ, đầu cầu là Tháp Bút trên núi Độc Tôn.',
     coordinates: { lat: 21.0287, lng: 105.8524 },
+    mapsQuery: 'Hồ Hoàn Kiếm',
+    model: { path: '/models/ho-hoan-kiem.glb', sizeKb: 406 },
   },
   {
     slug: 'nha-tho-lon-ha-noi',
