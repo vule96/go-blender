@@ -308,6 +308,17 @@ export const LANDMARK_SEED = [
     model: { path: '/models/quang-truong-lam-vien.glb', sizeKb: 462 },
   },
   {
+    slug: 'ga-da-lat',
+    name: 'Ga Đà Lạt',
+    provinceId: 'lam-dong',
+    category: 'historical',
+    summary:
+      'Nhà ga do hai kiến trúc sư người Pháp Moncet và Reveron thiết kế, xây từ năm 1935 đến 1938, kết hợp Art Deco với mái nhà rông Tây Nguyên. Ba mái nhọn cao vút tượng trưng cho ba đỉnh núi Lang Biang, dưới mỗi mái là ô kính màu, mái giữa có đồng hồ lớn; ngày nay tàu du lịch chạy tuyến Đà Lạt – Trại Mát dài 7 km.',
+    coordinates: { lat: 11.9416, lng: 108.4547 },
+    mapsQuery: 'Ga Đà Lạt',
+    model: { path: '/models/ga-da-lat.glb', sizeKb: 197 },
+  },
+  {
     slug: 'trang-an',
     name: 'Tràng An',
     provinceId: 'ninh-binh',
