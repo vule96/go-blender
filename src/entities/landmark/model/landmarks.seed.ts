@@ -85,6 +85,17 @@ export const LANDMARK_SEED = [
     model: { path: '/models/nha-tho-lon-ha-noi.glb', sizeKb: 468 },
   },
   {
+    slug: 'lang-bac',
+    name: 'Lăng Chủ tịch Hồ Chí Minh',
+    provinceId: 'ha-noi',
+    category: 'historical',
+    summary:
+      'Lăng được khởi công ngày 2/9/1973 và khánh thành ngày 29/8/1975, cao 21,6 m, rộng 41,2 m, ốp đá hoa cương xám. Thân lăng có hàng cột vuông bao quanh, phía trên là dòng chữ "Chủ tịch Hồ-Chí-Minh" bằng đá đỏ; hai bên là lễ đài, phía trước là quảng trường Ba Đình với các ô cỏ và cột cờ.',
+    coordinates: { lat: 21.0368, lng: 105.8346 },
+    mapsQuery: 'Lăng Chủ tịch Hồ Chí Minh',
+    model: { path: '/models/lang-bac.glb', sizeKb: 178 },
+  },
+  {
     slug: 'van-mieu-quoc-tu-giam',
     name: 'Văn Miếu – Quốc Tử Giám',
     provinceId: 'ha-noi',
