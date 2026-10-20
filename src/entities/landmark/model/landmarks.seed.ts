@@ -133,8 +133,11 @@ export const LANDMARK_SEED = [
     name: 'Hoàng thành Huế',
     provinceId: 'hue',
     category: 'historical',
-    summary: 'Kinh thành của triều Nguyễn bên bờ sông Hương, thuộc Quần thể di tích Cố đô Huế.',
-    coordinates: { lat: 16.4698, lng: 107.5786 },
+    summary:
+      'Hoàng thành của triều Nguyễn bên bờ sông Hương. Cổng chính Ngọ Môn xây năm 1833 dưới thời Minh Mạng: đài đá hình chữ U với năm lối đi (cửa giữa dành riêng cho vua), trên đỉnh là lầu Ngũ Phụng bằng gỗ lim với mái giữa lợp ngói hoàng lưu ly vàng, các mái hai bên lợp ngói thanh lưu ly xanh.',
+    coordinates: { lat: 16.4677, lng: 107.5786 },
+    mapsQuery: 'Ngọ Môn, Hoàng thành Huế',
+    model: { path: '/models/hoang-thanh-hue.glb', sizeKb: 168 },
   },
   {
     slug: 'cau-rong',
