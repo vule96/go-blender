@@ -231,6 +231,17 @@ export const LANDMARK_SEED = [
     model: { path: '/models/thao-cam-vien.glb', sizeKb: 194 },
   },
   {
+    slug: 'bitexco',
+    name: 'Tháp Bitexco (Bitexco Financial Tower)',
+    provinceId: 'tp-ho-chi-minh',
+    category: 'architecture',
+    summary:
+      'Tòa tháp cao 262,5 m với 68 tầng ở số 2 Hải Triều, khánh thành ngày 31/10/2010, do kiến trúc sư Carlos Zapata thiết kế lấy cảm hứng từ búp sen. Sân đỗ trực thăng ở tầng 52 vươn ra khoảng 22 m; chân tháp là khối đế thương mại năm tầng. Trong mô hình, chiều cao tháp được thu ngắn để vừa khối đế.',
+    coordinates: { lat: 10.7717, lng: 106.7044 },
+    mapsQuery: 'Bitexco Financial Tower',
+    model: { path: '/models/bitexco.glb', sizeKb: 347 },
+  },
+  {
     slug: 'ho-xuan-huong',
     name: 'Hồ Xuân Hương',
     provinceId: 'lam-dong',
