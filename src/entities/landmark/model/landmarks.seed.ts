@@ -253,6 +253,17 @@ export const LANDMARK_SEED = [
     model: { path: '/models/buu-dien-sai-gon.glb', sizeKb: 167 },
   },
   {
+    slug: 'suoi-tien',
+    name: 'Công viên Văn hóa Suối Tiên',
+    provinceId: 'tp-ho-chi-minh',
+    category: 'culture',
+    summary:
+      'Khu du lịch rộng khoảng 150 ha trên xa lộ Hà Nội (nay là đường Võ Nguyên Giáp), mở cửa năm 1995, lấy cảm hứng từ truyền thuyết Lạc Long Quân – Âu Cơ. Nổi bật là Biển Tiên Đồng, bãi biển nhân tạo dưới chân núi Âu Cơ có gương mặt Lạc Long Quân tạc lớn và thác nước, cùng những con rồng khổng lồ, đền thờ, vương quốc cá sấu và tàu lượn; ga metro Suối Tiên nằm ngay phía trước.',
+    coordinates: { lat: 10.8657, lng: 106.803 },
+    mapsQuery: 'Công viên Văn hóa Suối Tiên',
+    model: { path: '/models/suoi-tien.glb', sizeKb: 203 },
+  },
+  {
     slug: 'ho-xuan-huong',
     name: 'Hồ Xuân Hương',
     provinceId: 'lam-dong',
