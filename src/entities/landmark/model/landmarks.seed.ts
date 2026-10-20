@@ -401,6 +401,17 @@ export const LANDMARK_SEED = [
     model: { path: '/models/cot-co-lung-cu.glb', sizeKb: 254 },
   },
   {
+    slug: 'den-hung',
+    name: 'Đền Hùng',
+    provinceId: 'phu-tho',
+    category: 'historical',
+    summary:
+      'Khu di tích thờ các vua Hùng trên núi Nghĩa Lĩnh (cao khoảng 175 m), Việt Trì. Qua cổng đền xây năm 1917, những bậc đá xuyên rừng dẫn lên Đền Hạ, Đền Trung rồi Đền Thượng trên đỉnh, bên cạnh là lăng Hùng Vương; dưới chân núi phía bên kia là Đền Giếng với giếng Ngọc. Giỗ Tổ Hùng Vương vào mùng 10 tháng 3 âm lịch.',
+    coordinates: { lat: 21.3683, lng: 105.3237 },
+    mapsQuery: 'Khu di tích lịch sử Đền Hùng, Phú Thọ',
+    model: { path: '/models/den-hung.glb', sizeKb: 312 },
+  },
+  {
     slug: 'phong-nha-ke-bang',
     name: 'Phong Nha – Kẻ Bàng',
     provinceId: 'quang-tri',
