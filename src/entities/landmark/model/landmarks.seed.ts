@@ -111,8 +111,11 @@ export const LANDMARK_SEED = [
     name: 'Văn Miếu – Quốc Tử Giám',
     provinceId: 'ha-noi',
     category: 'historical',
-    summary: 'Quần thể thờ Khổng Tử và là trường đại học đầu tiên của Việt Nam, xây dựng từ thời Lý.',
-    coordinates: { lat: 21.0293, lng: 105.8355 },
+    summary:
+      'Văn Miếu được lập năm 1070 thời vua Lý Thánh Tông, sau có thêm Quốc Tử Giám, trường đại học đầu tiên của Việt Nam. Quần thể gồm năm khu sân nối nhau qua các cổng; nổi bật là Khuê Văn Các (1805) với bốn trụ gạch và gác son có cửa sổ tròn, giếng Thiên Quang và 82 tấm bia tiến sĩ đặt trên lưng rùa đá.',
+    coordinates: { lat: 21.0286, lng: 105.8356 },
+    mapsQuery: 'Văn Miếu - Quốc Tử Giám',
+    model: { path: '/models/van-mieu-quoc-tu-giam.glb', sizeKb: 172 },
   },
   {
     slug: 'vinh-ha-long',
@@ -269,7 +272,7 @@ export const LANDMARK_SEED = [
     provinceId: 'tp-ho-chi-minh',
     category: 'architecture',
     summary:
-      'Tòa tháp 81 tầng cao 461,2 m (tính cả chóp) trong khu Vinhomes Central Park bên sông Sài Gòn, cất nóc năm 2018 và là tòa nhà cao nhất Việt Nam. Thiết kế của Atkins lấy cảm hứng từ bó đũa tre, gồm nhiều khối hộp dừng ở những độ cao khác nhau; đài quan sát SkyView nằm ở tầng 79–81. Trong mô hình, chiều cao được thu ngắn để vừa khối đế.',
+      'Tòa tháp 81 tầng cao 461,2 m (tính cả chóp) trong khu Vinhomes Central Park bên sông Sài Gòn, cất nóc năm 2018, là tòa nhà cao nhất Việt Nam khi hoàn thành. Thiết kế của Atkins lấy cảm hứng từ bó đũa tre, gồm nhiều khối hộp dừng ở những độ cao khác nhau; đài quan sát SkyView nằm ở tầng 79–81. Trong mô hình, chiều cao được thu ngắn để vừa khối đế.',
     coordinates: { lat: 10.7951, lng: 106.7218 },
     mapsQuery: 'Landmark 81',
     model: { path: '/models/landmark-81.glb', sizeKb: 184 },
