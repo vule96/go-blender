@@ -278,6 +278,17 @@ export const LANDMARK_SEED = [
     model: { path: '/models/landmark-81.glb', sizeKb: 184 },
   },
   {
+    slug: 'tuong-chua-kito-vua',
+    name: 'Tượng Chúa Kitô Vua (Vũng Tàu)',
+    provinceId: 'tp-ho-chi-minh',
+    category: 'religious',
+    summary:
+      'Tượng Chúa dang tay trên đỉnh Núi Nhỏ, Vũng Tàu, nhìn ra biển Đông. Tượng cao 32 m đặt trên bệ cao 4 m, sải tay dài 18,3 m; khởi công năm 1974 và hoàn thành năm 1994. Bên trong tượng có cầu thang 133 bậc dẫn lên đến hai cánh tay.',
+    coordinates: { lat: 10.3263, lng: 107.0848 },
+    mapsQuery: 'Tượng Chúa Kitô Vua, Vũng Tàu',
+    model: { path: '/models/tuong-chua-kito-vua.glb', sizeKb: 131 },
+  },
+  {
     slug: 'ho-xuan-huong',
     name: 'Hồ Xuân Hương',
     provinceId: 'lam-dong',
