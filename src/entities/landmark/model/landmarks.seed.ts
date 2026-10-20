@@ -220,6 +220,17 @@ export const LANDMARK_SEED = [
     model: { path: '/models/nha-tho-tan-dinh.glb', sizeKb: 402 },
   },
   {
+    slug: 'thao-cam-vien',
+    name: 'Thảo Cầm Viên Sài Gòn',
+    provinceId: 'tp-ho-chi-minh',
+    category: 'nature',
+    summary:
+      'Vườn bách thảo và vườn thú lập từ tháng 3/1864 bên kênh Thị Nghè, một trong những vườn thú lâu đời nhất thế giới. Gần cổng là đền Vua Hùng và bảo tàng lịch sử xây từ 1926 đến 1929 theo lối kiến trúc Đông - Tây kết hợp; trong vườn có hàng nghìn cây cổ thụ và hơn 120 loài thú như hươu cao cổ, voi, hồng hạc.',
+    coordinates: { lat: 10.7875, lng: 106.7052 },
+    mapsQuery: 'Thảo Cầm Viên Sài Gòn',
+    model: { path: '/models/thao-cam-vien.glb', sizeKb: 194 },
+  },
+  {
     slug: 'ho-xuan-huong',
     name: 'Hồ Xuân Hương',
     provinceId: 'lam-dong',
