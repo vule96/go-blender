@@ -405,9 +405,11 @@ export const LANDMARK_SEED = [
     name: 'Phong Nha – Kẻ Bàng',
     provinceId: 'quang-tri',
     category: 'nature',
-    summary: 'Vườn quốc gia với hệ thống hang động đá vôi đồ sộ, Di sản Thiên nhiên Thế giới.',
+    summary:
+      'Vườn quốc gia trên khối núi đá vôi phủ rừng nhiệt đới, Di sản Thiên nhiên Thế giới (Quảng Bình cũ, nay thuộc Quảng Trị). Động Phong Nha dài 7.729 m, sông Son chảy ngầm trong lòng núi rồi đổ ra ở cửa động; du khách đi thuyền rồng ngược sông vào hang, ngắm nhũ đá và măng đá trong các khoang động.',
     coordinates: { lat: 17.5905, lng: 106.2833 },
-    mapsQuery: 'Vườn quốc gia Phong Nha - Kẻ Bàng',
+    mapsQuery: 'Động Phong Nha, Quảng Trị',
+    model: { path: '/models/phong-nha-ke-bang.glb', sizeKb: 392 },
   },
   {
     slug: 'cho-noi-cai-rang',
@@ -426,7 +428,7 @@ export const LANDMARK_SEED = [
     provinceId: 'tay-ninh',
     category: 'religious',
     summary:
-      'Thánh thất trung ương của đạo Cao Đài, khởi công năm 1933 và khánh thành năm 1955. Mặt tiền Hiệp Thiên Đài có hai tháp chuông, tháp trống và biểu tượng Thiên Nhãn; nối phía sau là Cửu Trùng Đài chia chín cấp, cuối cùng là Bát Quái Đài hình bát giác. Phía trước là sân Đại Đồng Xã rộng, chung quanh là khuôn viên rợp cây cổ thụ; tín đồ mặc áo dài trắng dự lễ.',
+      'Thánh thất trung ương của đạo Cao Đài, khởi công năm 1933 và khánh thành năm 1955. Mặt tiền Hiệp Thiên Đài có hai tháp lầu chuông, lầu trống và biểu tượng Thiên Nhãn; nối phía sau là Cửu Trùng Đài chia chín cấp, cuối cùng là Bát Quái Đài hình bát giác. Phía trước là sân Đại Đồng Xã rộng, chung quanh là khuôn viên rợp cây cổ thụ; tín đồ mặc áo dài trắng dự lễ.',
     coordinates: { lat: 11.2919, lng: 106.1306 },
     mapsQuery: 'Tòa Thánh Tây Ninh',
     model: { path: '/models/toa-thanh-tay-ninh.glb', sizeKb: 272 },
