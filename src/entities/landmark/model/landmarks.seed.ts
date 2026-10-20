@@ -446,7 +446,10 @@ export const LANDMARK_SEED = [
     name: 'Mũi Cà Mau',
     provinceId: 'ca-mau',
     category: 'nature',
-    summary: 'Điểm cực Nam trên đất liền của Tổ quốc, nơi có rừng ngập mặn và cột mốc tọa độ quốc gia.',
+    summary:
+      'Điểm cực Nam trên đất liền của Tổ quốc, nơi biển Đông và biển Tây gặp nhau. Trong khu du lịch có biểu tượng con tàu căng buồm hướng ra biển, cột mốc tọa độ quốc gia GPS 0001, đài quan sát và cầu gỗ ra bãi bồi. Xung quanh là rừng đước ngập mặn bạt ngàn, ghe thuyền đánh cá và chòi canh trên bãi bồi.',
     coordinates: { lat: 8.6156, lng: 104.7194 },
+    mapsQuery: 'Khu du lịch Mũi Cà Mau',
+    model: { path: '/models/mui-ca-mau.glb', sizeKb: 460 },
   },
 ] as const satisfies readonly LandmarkInput[];
