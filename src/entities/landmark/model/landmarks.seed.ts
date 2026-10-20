@@ -372,8 +372,11 @@ export const LANDMARK_SEED = [
     name: 'Đỉnh Fansipan',
     provinceId: 'lao-cai',
     category: 'nature',
-    summary: 'Đỉnh núi cao nhất Việt Nam thuộc dãy Hoàng Liên Sơn.',
+    summary:
+      'Nóc nhà Đông Dương cao 3.147,3 m (số đo truyền thống 3.143 m) trên dãy Hoàng Liên Sơn, đánh dấu bằng chóp inox ba cạnh trên đỉnh. Tuyến cáp treo dài khoảng 6,3 km khánh thành năm 2016 đưa du khách lên quần thể tâm linh với chùa, bảo tháp và tượng Phật A Di Đà bằng đồng cao 21,5 m, giữa biển mây.',
     coordinates: { lat: 22.3033, lng: 103.775 },
+    mapsQuery: 'Đỉnh Fansipan, Sa Pa',
+    model: { path: '/models/dinh-fansipan.glb', sizeKb: 363 },
   },
   {
     slug: 'phong-nha-ke-bang',
