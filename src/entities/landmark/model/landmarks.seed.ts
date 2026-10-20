@@ -368,6 +368,17 @@ export const LANDMARK_SEED = [
     model: { path: '/models/trang-an.glb', sizeKb: 315 },
   },
   {
+    slug: 'thac-ban-gioc',
+    name: 'Thác Bản Giốc',
+    provinceId: 'cao-bang',
+    category: 'nature',
+    summary:
+      'Thác nước trên sông Quây Sơn ở đường biên giới Việt – Trung, xã Đàm Thủy, cách trung tâm Cao Bằng khoảng 89 km. Thác cao khoảng 53 m, rộng khoảng 300 m, đổ xuống ba tầng, dòng nước bị các mỏm đá phủ cây xanh chia thành nhiều dải trắng. Du khách đi bè tre ra sát chân thác, xung quanh là núi đá vôi và ruộng lúa.',
+    coordinates: { lat: 22.8546, lng: 106.7233 },
+    mapsQuery: 'Thác Bản Giốc, Cao Bằng',
+    model: { path: '/models/thac-ban-gioc.glb', sizeKb: 280 },
+  },
+  {
     slug: 'dinh-fansipan',
     name: 'Đỉnh Fansipan',
     provinceId: 'lao-cai',
