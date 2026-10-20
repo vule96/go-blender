@@ -108,8 +108,11 @@ export const LANDMARK_SEED = [
     name: 'Vịnh Hạ Long',
     provinceId: 'quang-ninh',
     category: 'nature',
-    summary: 'Vịnh biển với hàng nghìn đảo đá vôi, Di sản Thiên nhiên Thế giới được UNESCO công nhận.',
+    summary:
+      'Vịnh rộng 1.553 km² với 1.969 hòn đảo đá vôi, được UNESCO ghi vào danh mục Di sản Thế giới năm 1994. Nổi tiếng nhất là hòn Trống Mái, hai đảo đá nhỏ cao khoảng 12 m đứng đối diện nhau như cặp gà trống mái, giữa những du thuyền và làng chài nổi.',
     coordinates: { lat: 20.91, lng: 107.18 },
+    mapsQuery: 'Vịnh Hạ Long',
+    model: { path: '/models/vinh-ha-long.glb', sizeKb: 186 },
   },
   {
     slug: 'hoang-thanh-hue',
