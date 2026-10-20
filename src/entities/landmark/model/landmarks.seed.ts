@@ -289,6 +289,17 @@ export const LANDMARK_SEED = [
     model: { path: '/models/tuong-chua-kito-vua.glb', sizeKb: 131 },
   },
   {
+    slug: 'thap-nghinh-phong',
+    name: 'Tháp Nghinh Phong (Phú Yên)',
+    provinceId: 'dak-lak',
+    category: 'architecture',
+    summary:
+      'Công trình giữa quảng trường ven biển Tuy Hòa (Phú Yên cũ), khánh thành năm 2022. Hai khối tháp cao khoảng 35 m và 30 m được xếp từ những phiến đá hình lục giác gợi nhớ Gành Đá Đĩa, mỗi khối 50 phiến tượng trưng cho 50 người con theo cha xuống biển và 50 người con theo mẹ lên núi; khe hẹp giữa hai tháp có phù điêu và tạo tiếng gió nên gọi là “đón gió”.',
+    coordinates: { lat: 13.0955, lng: 109.3185 },
+    mapsQuery: 'Tháp Nghinh Phong, Tuy Hòa',
+    model: { path: '/models/thap-nghinh-phong.glb', sizeKb: 308 },
+  },
+  {
     slug: 'ho-xuan-huong',
     name: 'Hồ Xuân Hương',
     provinceId: 'lam-dong',
