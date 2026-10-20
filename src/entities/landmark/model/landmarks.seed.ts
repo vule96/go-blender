@@ -379,6 +379,17 @@ export const LANDMARK_SEED = [
     model: { path: '/models/dinh-fansipan.glb', sizeKb: 363 },
   },
   {
+    slug: 'cot-co-lung-cu',
+    name: 'Cột cờ Lũng Cú',
+    provinceId: 'tuyen-quang',
+    category: 'historical',
+    summary:
+      'Cột cờ trên đỉnh núi Rồng ở cực Bắc Tổ quốc, xã Lũng Cú (huyện Đồng Văn, Hà Giang cũ, nay thuộc Tuyên Quang). Cột cao 33,15 m, thân bát giác trang trí hoa văn trống đồng Đông Sơn, chân cột có phù điêu đời sống đồng bào vùng cao nguyên đá. Lá cờ rộng 54 m², tượng trưng cho 54 dân tộc Việt Nam. Dưới chân núi là làng nhà trình tường của người Lô Lô và ruộng bậc thang.',
+    coordinates: { lat: 23.3637, lng: 105.3161 },
+    mapsQuery: 'Cột cờ Lũng Cú',
+    model: { path: '/models/cot-co-lung-cu.glb', sizeKb: 254 },
+  },
+  {
     slug: 'phong-nha-ke-bang',
     name: 'Phong Nha – Kẻ Bàng',
     provinceId: 'quang-tri',
