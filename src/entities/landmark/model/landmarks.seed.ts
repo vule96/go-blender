@@ -412,6 +412,17 @@ export const LANDMARK_SEED = [
     model: { path: '/models/den-hung.glb', sizeKb: 312 },
   },
   {
+    slug: 'thanh-nha-ho',
+    name: 'Thành nhà Hồ',
+    provinceId: 'thanh-hoa',
+    category: 'historical',
+    summary:
+      'Tòa thành đá do Hồ Quý Ly cho xây năm 1397 ở Vĩnh Lộc, mặt bằng gần vuông khoảng 870 × 883 m với bốn cổng. Cổng Nam cao khoảng 9,5 m, rộng hơn 15 m, gồm ba vòm cuốn ghép từ những khối đá lớn, trung bình khoảng 2 × 1 × 0,7 m, không dùng vữa. Ngày nay tường thành phần lớn đã đổ, xung quanh là ruộng lúa và làng quê. Di sản Văn hóa Thế giới từ năm 2011.',
+    coordinates: { lat: 20.0781, lng: 105.6047 },
+    mapsQuery: 'Thành nhà Hồ, Vĩnh Lộc, Thanh Hóa',
+    model: { path: '/models/thanh-nha-ho.glb', sizeKb: 171 },
+  },
+  {
     slug: 'phong-nha-ke-bang',
     name: 'Phong Nha – Kẻ Bàng',
     provinceId: 'quang-tri',
