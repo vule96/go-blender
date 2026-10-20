@@ -410,6 +410,17 @@ export const LANDMARK_SEED = [
     mapsQuery: 'Vườn quốc gia Phong Nha - Kẻ Bàng',
   },
   {
+    slug: 'cho-noi-cai-rang',
+    name: 'Chợ nổi Cái Răng',
+    provinceId: 'can-tho',
+    category: 'culture',
+    summary:
+      'Chợ trên sông Cần Thơ, gần cầu Cái Răng, cách trung tâm thành phố khoảng 7 km. Từ tờ mờ sáng, ghe bầu chở đầy dưa hấu, bí, dừa, khóm neo san sát; mỗi ghe treo hàng mình bán lên cây bẹo cao để khách nhìn từ xa. Xen giữa là xuồng nhỏ bán đồ ăn sáng và thuyền chở khách tham quan, hai bên bờ là nhà sàn ven sông và hàng dừa.',
+    coordinates: { lat: 10.0067, lng: 105.7486 },
+    mapsQuery: 'Chợ nổi Cái Răng, Cần Thơ',
+    model: { path: '/models/cho-noi-cai-rang.glb', sizeKb: 493 },
+  },
+  {
     slug: 'dao-phu-quoc',
     name: 'Đảo Phú Quốc',
     provinceId: 'an-giang',
