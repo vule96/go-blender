@@ -163,12 +163,14 @@ export const LANDMARK_SEED = [
   },
   {
     slug: 'pho-co-hoi-an',
-    name: 'Phố cổ Hội An',
+    name: 'Chùa Cầu – Phố cổ Hội An',
     provinceId: 'da-nang',
     category: 'culture',
-    summary: 'Thương cảng cổ với nhà gỗ, hội quán và đèn lồng, Di sản Văn hóa Thế giới.',
-    coordinates: { lat: 15.8801, lng: 108.338 },
-    mapsQuery: 'Phố cổ Hội An',
+    summary:
+      'Cây cầu gỗ có mái dài khoảng 18 m bắc qua con lạch đổ ra sông Hoài, do thương nhân Nhật Bản dựng cuối thế kỷ 16; ngôi miếu thờ Bắc Đế Trấn Võ được thêm vào phía bắc cầu năm 1653. Hai đầu cầu có tượng khỉ và tượng chó. Xung quanh là phố cổ tường vàng mái ngói, đèn lồng và thuyền hoa đăng, Di sản Văn hóa Thế giới từ năm 1999.',
+    coordinates: { lat: 15.8771, lng: 108.3262 },
+    mapsQuery: 'Chùa Cầu, Hội An',
+    model: { path: '/models/pho-co-hoi-an.glb', sizeKb: 475 },
   },
   {
     slug: 'nha-tho-duc-ba-sai-gon',
